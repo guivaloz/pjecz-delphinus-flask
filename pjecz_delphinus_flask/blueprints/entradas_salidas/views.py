@@ -7,12 +7,11 @@ import json
 from flask import Blueprint, render_template, request, url_for
 from flask_login import login_required
 
-from pjecz_hercules_beta_flask.blueprints.entradas_salidas.models import EntradaSalida
-from pjecz_hercules_beta_flask.blueprints.permisos.models import Permiso
-from pjecz_hercules_beta_flask.blueprints.usuarios.decorators import permission_required
-from pjecz_hercules_beta_flask.blueprints.usuarios.models import Usuario
-from pjecz_hercules_beta_flask.lib.datatables import get_datatable_parameters, output_datatable_json
-from pjecz_hercules_beta_flask.lib.safe_string import safe_email
+from pjecz_delphinus_flask.blueprints.entradas_salidas.models import EntradaSalida
+from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
+from pjecz_delphinus_flask.blueprints.usuarios.decorators import permission_required
+from pjecz_delphinus_flask.blueprints.usuarios.models import Usuario
+from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
 
 MODULO = "ENTRADAS SALIDAS"
 

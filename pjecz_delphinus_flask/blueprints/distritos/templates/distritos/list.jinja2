@@ -51,8 +51,6 @@
                     <th>Clave</th>
                     <th>Nombre</th>
                     <th>Nombre corto</th>
-                    <th>Es D.</th>
-                    <th>Es J.</th>
                 </tr>
             </thead>
         </table>
@@ -71,9 +69,7 @@
         configDTDistritos['columns'] = [
             { data: 'detalle' },
             { data: 'nombre' },
-            { data: 'nombre_corto' },
-            { data: 'es_distrito' },
-            { data: 'es_jurisdiccional' }
+            { data: 'nombre_corto' }
         ];
         configDTDistritos['columnDefs'] = [
             {
@@ -81,13 +77,6 @@
                 data: null,
                 render: function(data, type, row, meta) {
                     return '<a href="' + data.url + '">' + data.clave + '</a>';
-                }
-            },
-            {
-                targets: [3, 4], // es_distrito, es_jurisdiccional
-                data: null,
-                render: function(data, type, row, meta) {
-                    if (data) { return 'Si'; } else { return ''; }
                 }
             }
         ];

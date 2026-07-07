@@ -80,6 +80,7 @@ def datatable_json():
                     "clave": resultado.clave,
                     "url": url_for("autoridades.detail", autoridad_id=resultado.id),
                 },
+                "descripcion": resultado.descripcion,
                 "descripcion_corta": resultado.descripcion_corta,
                 "distrito_clave": resultado.distrito.clave,
                 "distrito_nombre_corto": resultado.distrito.nombre_corto,

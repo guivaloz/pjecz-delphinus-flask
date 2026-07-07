@@ -8,24 +8,6 @@
 {% block topbar_actions %}
     {% call topbar.page_buttons('Autoridad ' + autoridad.clave) %}
         {{ topbar.button_previous('Autoridades', url_for('autoridades.list_active')) }}
-        {% if current_user.can_admin('EDICTOS') and autoridad.directorio_edictos != "" %}
-            {{ topbar.button_upload('Subir Edicto', url_for('edictos.new_with_autoridad_id', autoridad_id=autoridad.id)) }}
-        {% endif %}
-        {% if current_user.can_admin('ESTRADOS') and autoridad.directorio_estrados != "" %}
-            {{ topbar.button_upload('Subir Estrado', url_for('estrados.new_with_autoridad_id', autoridad_id=autoridad.id)) }}
-        {% endif %}
-        {% if current_user.can_admin('GLOSAS') and autoridad.directorio_glosas != "" %}
-            {{ topbar.button_upload('Subir Glosa', url_for('glosas.new_with_autoridad_id', autoridad_id=autoridad.id)) }}
-        {% endif %}
-        {% if current_user.can_admin('LISTAS DE ACUERDOS') and autoridad.directorio_listas_de_acuerdos != "" %}
-            {{ topbar.button_upload('Subir L. de A.', url_for('listas_de_acuerdos.new_with_autoridad_id', autoridad_id=autoridad.id)) }}
-        {% endif %}
-        {% if current_user.can_admin('SENTENCIAS') and autoridad.directorio_sentencias != "" %}
-            {{ topbar.button_upload('Subir V.P. de Sentencia', url_for('sentencias.new_with_autoridad_id', autoridad_id=autoridad.id)) }}
-        {% endif %}
-        {% if current_user.can_edit('AUTORIDADES') %}
-            {{ topbar.button_edit('Editar', url_for('autoridades.edit', autoridad_id=autoridad.id)) }}
-        {% endif %}
         {% if current_user.can_admin('AUTORIDADES') %}
             {% if autoridad.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('autoridades.delete', autoridad_id=autoridad.id)) }}{% endif %}
             {% if autoridad.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('autoridades.recover', autoridad_id=autoridad.id)) }}{% endif %}
@@ -36,59 +18,13 @@
 {% block content %}
     {% call detail.card(estatus=autoridad.estatus) %}
         <div class="row">
-            <div class="col-md-6">
-                {# detail.label_value_big('Clave', autoridad.clave) #}
-                {{ detail.label_value('Descripción', autoridad.descripcion) }}
-                {{ detail.label_value('Descripción corta', autoridad.descripcion_corta) }}
-                {% if current_user.can_view("DISTRITOS") %}
-                    {{ detail.label_value('Distrito', autoridad.distrito.nombre, url_for('distritos.detail', distrito_id=autoridad.distrito_id)) }}
-                {% else %}
-                    {{ detail.label_value('Distrito', autoridad.distrito.nombre) }}
-                {% endif %}
-                {% if current_user.can_view("MUNICIPIOS") %}
-                    {{ detail.label_value('Municipio', autoridad.municipio.nombre, url_for('municipios.detail', municipio_id=autoridad.municipio_id)) }}
-                {% else %}
-                    {{ detail.label_value('Municipio', autoridad.municipio.nombre) }}
-                {% endif %}
-                {% if current_user.can_view("MATERIAS") %}
-                    {{ detail.label_value('Materia', autoridad.materia.nombre, url_for('materias.detail', materia_id=autoridad.materia_id)) }}
-                {% else %}
-                    {{ detail.label_value('Materia', autoridad.materia.nombre) }}
-                {% endif %}
-                {{ detail.label_value('Ó. Jurisdiccional', autoridad.organo_jurisdiccional) }}
-                {{ detail.label_value('C. de Audiencias', autoridad.audiencia_categoria) }}
-                {{ detail.label_value('Sede (AJG)', autoridad.sede) }}
-                {{ detail.label_value('Datawarehouse ID', autoridad.datawarehouse_id) }}
-                {{ detail.label_value('Datawarehouse ID (SAJI 2025)', autoridad.datawarehouse_id_saji) }}
-                {% if autoridad.tablero_icono %}
-                <div class="row">
-                    <div class="col-md-3 text-end">Icono</div>
-                    <div class="col-md-9">
-                        <strong>{{autoridad.tablero_icono}}</strong> <span class="{{autoridad.tablero_icono}}"></span>
-                    </div>
-                </div>
-                {% endif %}
-                {% if autoridad.tabla_renglon_color %}
-                <div class="row">
-                    <div class="col-md-3 text-end">Color</div>
-                    <div class="col-md-9">
-                        <strong>{{autoridad.tabla_renglon_color}}</strong> <span class="mdi mdi-square" style="color: {{autoridad.tabla_renglon_color}};"></span>
-                    </div>
-                </div>
-                {% endif %}
-                {{ detail.label_value('Destinatarios', autoridad.destinatarios_emails) }}
-                {{ detail.label_value('Con Copias', autoridad.con_copias_emails) }}
-            </div>
-            <div class="col-md-6">
-                {{ detail.label_value_boolean('Es Archivo Solicitante', autoridad.es_archivo_solicitante) }}
-                {{ detail.label_value_boolean('Es CEMASC', autoridad.es_cemasc) }}
-                {{ detail.label_value_boolean('Es Defensoría', autoridad.es_defensoria) }}
-                {{ detail.label_value_boolean('Es Extinto', autoridad.es_extinto) }}
-                {{ detail.label_value_boolean('Es Jurisdiccional', autoridad.es_jurisdiccional) }}
-                {{ detail.label_value_boolean('Es Notaría', autoridad.es_notaria) }}
-                {{ detail.label_value_boolean('Es Órgano Especializado', autoridad.es_organo_especializado) }}
-                {{ detail.label_value_boolean('Es revisor de escrituras', autoridad.es_revisor_escrituras) }}
-            </div>
+            {{ detail.label_value('Descripción', autoridad.descripcion) }}
+            {{ detail.label_value('Descripción corta', autoridad.descripcion_corta) }}
+            {% if current_user.can_view("DISTRITOS") %}
+                {{ detail.label_value('Distrito', autoridad.distrito.nombre, url_for('distritos.detail', distrito_id=autoridad.distrito_id)) }}
+            {% else %}
+                {{ detail.label_value('Distrito', autoridad.distrito.nombre) }}
+            {% endif %}
         </div>
     {% endcall %}
     {% if current_user.can_view('USUARIOS') and autoridad.estatus == 'A' %}
@@ -130,7 +66,6 @@
                         <th>Nombre completo</th>
                         <th>CURP</th>
                         <th>Puesto</th>
-                        <th>Oficina</th>
                     </tr>
                 </thead>
             </table>
@@ -158,8 +93,7 @@
                 { data: "detalle" },
                 { data: "nombre" },
                 { data: "curp" },
-                { data: "puesto" },
-                { data: "oficina" }
+                { data: "puesto" }
             ];
             configDTUsuarios['columnDefs'] = [
                 {
@@ -184,16 +118,6 @@
                             return '<span title="' + data + '">' + data.substring(0, 4) + '…</span>';
                         }
                         return data;
-                    }
-                },
-                {
-                    targets: 4, // oficina
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        if (data.url === "") {
-                            return data.clave;
-                        }
-                        return '<a href="' + data.url + '">' + data.clave + '</a>';
                     }
                 }
             ];

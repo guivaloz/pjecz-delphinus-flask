@@ -62,7 +62,6 @@
                     <th>CURP</th>
                     <th>Puesto</th>
                     <th>Autoridad</th>
-                    <th>Oficina</th>
                 </tr>
             </thead>
         </table>
@@ -83,8 +82,7 @@
             { data: "nombre" },
             { data: "curp" },
             { data: "puesto" },
-            { data: "autoridad" },
-            { data: "oficina" }
+            { data: "autoridad" }
         ];
         configDTUsuarios['columnDefs'] = [
             {
@@ -115,7 +113,7 @@
                 }
             },
             {
-                targets: [4, 5], // autoridad, oficina
+                targets: 4, // autoridad
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data.url === "") {

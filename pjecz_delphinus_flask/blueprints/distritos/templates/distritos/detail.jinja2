@@ -23,9 +23,6 @@
         {{ detail.label_value_big('Clave', distrito.clave) }}
         {{ detail.label_value('Nombre', distrito.nombre) }}
         {{ detail.label_value('Nombre corto', distrito.nombre_corto) }}
-        {{ detail.label_value_boolean('Es Distrito Judicial (pjecz.gob.mx)', distrito.es_distrito_judicial) }}
-        {{ detail.label_value_boolean('Es Distrito (geográfico)', distrito.es_distrito) }}
-        {{ detail.label_value_boolean('Es Jurisdiccional', distrito.es_jurisdiccional) }}
     {% endcall %}
     {% if current_user.can_view('AUTORIDADES') and distrito.estatus == 'A' %}
         {% call detail.card('Autoridades') %}
@@ -57,47 +54,8 @@
                 <thead>
                     <tr>
                         <th>Clave</th>
+                        <th>Descripción</th>
                         <th>Descripción corta</th>
-                        <th>Municipio</th>
-                        <th>Extinto</th>
-                    </tr>
-                </thead>
-            </table>
-        {% endcall %}
-    {% endif %}
-    {% if current_user.can_view('OFICINAS') and distrito.estatus == 'A' %}
-        {% call detail.card('Oficinas') %}
-            <!-- Filtros Oficinas -->
-            <div class="row">
-                <div class="col">
-                    <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosOficinas.buscar(); return false;">
-                        <div class="col-2">
-                            <div class="form-floating">
-                                <input id="filtroOficinaClave" type="text" class="form-control" aria-label="Clave" style="text-transform: uppercase;">
-                                <label for="filtroOficinaClave">Clave</label>
-                            </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="form-floating">
-                                <input id="filtroOficinaDescripcionCorta" type="text" class="form-control" aria-label="Descripción corta" style="text-transform: uppercase;">
-                                <label for="filtroOficinaDescripcionCorta">Descripción corta</label>
-                            </div>
-                        </div>
-                        <div class="col-6 text-end">
-                            <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosOficinas.buscar(); return false;" id="button-buscar"><span class="mdi mdi-magnify"></span></button>
-                            <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosOficinas.limpiar();" id="button-limpiar"><span class="mdi mdi-broom"></span></button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- DataTable Oficinas -->
-            <table id="oficinas_datatable" class="table display nowrap" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>Clave</th>
-                        <th>Descripción corta</th>
-                        <th>Edificio</th>
-                        <th><span title="Es Jurisdiccional">Es J.</span></th>
                     </tr>
                 </thead>
             </table>
@@ -124,9 +82,8 @@
             configDTAutoridades['ajax']['data'] = { 'estatus': "A", 'distrito_id': {{ distrito.id }} };
             configDTAutoridades['columns'] = [
                 { data: "detalle" },
+                { data: "descripcion" },
                 { data: "descripcion_corta" },
-                { data: "municipio_nombre" },
-                { data: "es_extinto" }
             ];
             configDTAutoridades['columnDefs'] = [
                 {
@@ -142,51 +99,6 @@
             filtrosAutoridades.agregarInput('filtroAutoridadClave', 'clave');
             filtrosAutoridades.agregarInput('filtroAutoridadDescripcion', 'descripcion');
             filtrosAutoridades.precargar();
-        </script>
-    {% endif %}
-    {% if current_user.can_view('OFICINAS') and distrito.estatus == 'A' %}
-        <script>
-            // DataTable Oficinas
-            let configDTOficinas = constructorDataTable.config();
-            configDTOficinas['ajax']['url'] = "{{ url_for('oficinas.datatable_json') }}";
-            configDTOficinas['ajax']['data'] = { 'estatus': "A", 'distrito_id': {{ distrito.id }} };
-            configDTOficinas['columns'] = [
-                { data: "detalle" },
-                { data: "descripcion_corta" },
-                { data: "domicilio_edificio" },
-                { data: "es_jurisdiccional" }
-            ];
-            configDTOficinas['columnDefs'] = [
-                {
-                    targets: 0, // detalle
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return '<a href="' + data.url + '">' + data.clave + '</a>';
-                    }
-                },
-                {
-                    targets: 1, // descripcion_corta
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return (data.length > 32 ? data.substring(0, 32) + '…' : data);
-                    }
-                },
-                {
-                    targets: 3, // es_jurisdiccional
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        if (data) {
-                            return 'SI';
-                        }
-                        return '';
-                    }
-                }
-            ];
-            // Filtros Oficinas
-            const filtrosOficinas = new FiltrosDataTable('#oficinas_datatable', configDTOficinas);
-            filtrosOficinas.agregarInput('filtroOficinaClave', 'clave');
-            filtrosOficinas.agregarInput('filtroOficinaDescripcionCorta', 'descripcion_corta');
-            filtrosOficinas.precargar();
         </script>
     {% endif %}
 {% endblock %}

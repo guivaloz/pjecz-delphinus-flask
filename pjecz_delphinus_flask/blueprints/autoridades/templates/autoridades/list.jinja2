@@ -55,10 +55,9 @@
             <thead>
                 <tr>
                     <th>Clave</th>
+                    <th>Descripción</th>
                     <th>Descripción corta</th>
                     <th>Distrito</th>
-                    <th>Municipio</th>
-                    <th>Extinto</th>
                 </tr>
             </thead>
         </table>
@@ -76,10 +75,9 @@
         configDTAutoridades['ajax']['data'] = {{ filtros }};
         configDTAutoridades['columns'] = [
             { data: "detalle" },
+            { data: "descripcion" },
             { data: "descripcion_corta" },
-            { data: "distrito_clave" },
-            { data: "municipio_nombre" },
-            { data: "es_extinto" }
+            { data: "distrito_clave" }
         ];
         configDTAutoridades['columnDefs'] = [
             {

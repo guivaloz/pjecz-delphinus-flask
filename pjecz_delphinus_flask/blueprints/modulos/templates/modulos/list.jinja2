@@ -48,11 +48,6 @@
                     <th>Nombre</th>
                     <th>Icono</th>
                     <th>En menú</th>
-                    <th>P.C.M.</th>
-                    <th>P.C.</th>
-                    <th>P.H.</th>
-                    <th>P.W.</th>
-                    <th>P.N.</th>
                 </tr>
             </thead>
         </table>
@@ -71,12 +66,7 @@
         configDTModulos['columns'] = [
             { data: 'detalle' },
             { data: 'icono' },
-            { data: 'en_navegacion' },
-            { data: 'en_plataforma_can_mayor' },
-            { data: 'en_plataforma_carina' },
-            { data: 'en_plataforma_hercules' },
-            { data: 'en_plataforma_web' },
-            { data: 'en_portal_notarias' }
+            { data: 'en_navegacion' }
         ];
         configDTModulos['columnDefs'] = [
             {
@@ -94,7 +84,7 @@
                 }
             },
             {
-                targets: [2, 3, 4, 5, 6, 7], // boleanos
+                targets: 2, // en_navegacion
                 data: null,
                 render: function(data, type, row, meta) {
                     if (data) {

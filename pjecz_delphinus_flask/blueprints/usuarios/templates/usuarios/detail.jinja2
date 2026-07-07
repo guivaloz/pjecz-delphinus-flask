@@ -43,30 +43,16 @@
                     {{ detail.label_value('Oficina', usuario.oficina.clave + ' - ' + usuario.oficina.descripcion_corta) }}
                 {% endif %}
                 {{ detail.label_value('Puesto', usuario.puesto) }}
-                {{ detail.label_value('Workspace', usuario.workspace) }}
-                {{ detail.label_value('ID eFirma', usuario.efirma_registro_id) }}
             </div>
             <div class="col-md-3">
                 {% if current_user.can_view("BITACORAS") %}
                     {{ detail.button_md(label='Bitácoras', url=url_for('bitacoras.list_active', usuario_id=usuario.id), icon='mdi mdi-calendar-clock', color_class='btn-outline-secondary') }}
                 {% endif %}
-                {# if current_user.can_view("INV CUSTODIAS") and usuario.curp %}
-                    {{ detail.button_md(label='Custodias', url=url_for('inv_custodias.list_active', usuario_id=usuario.id), icon='mdi mdi-shield-account', color_class='btn-outline-secondary') }}
-                {% endif #}
                 {% if current_user.can_view("ENTRADAS SALIDAS") %}
                     {{ detail.button_md(label='Entradas-Salidas', url=url_for('entradas_salidas.list_active', usuario_id=usuario.id), icon='mdi mdi-calendar-clock', color_class='btn-outline-secondary') }}
                 {% endif %}
             </div>
             <div class="col-md-3">
-                {# if current_user.can_admin("CID PROCEDIMIENTOS") and usuario.curp %}
-                    {{ detail.button_md(label='SICGD Procedimientos propios', url=url_for('cid_procedimientos.list_active', usuario_id=usuario.id), icon='mdi mdi-book-open-variant', color_class='btn-outline-secondary') }}
-                {% endif #}
-                {# if current_user.can_admin("USUARIOS NOMINAS") and usuario.curp %}
-                    {{ detail.button_md(label='Recibos de Nómina', url=url_for('usuarios_nominas.list', usuario_id=usuario.id), icon='mdi mdi-account-cash', color_class='btn-outline-secondary') }}
-                {% endif #}
-                {# if current_user.can_admin("FIN VALES") and usuario.curp %}
-                    {{ detail.button_md(label='Vales de Gasolina', url=url_for('fin_vales.list_active', usuario_id=usuario.id), icon='mdi mdi-gas-station', color_class='btn-outline-secondary') }}
-                {% endif #}
             </div>
         </div>
     {% endcall %}
