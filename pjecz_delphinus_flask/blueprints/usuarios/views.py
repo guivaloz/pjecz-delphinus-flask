@@ -30,8 +30,6 @@ from pjecz_delphinus_flask.lib.safe_string import (
     safe_string,
 )
 
-HTTP_REQUEST = google.auth.transport.requests.Request()
-
 MODULO = "USUARIOS"
 
 usuarios = Blueprint("usuarios", __name__, template_folder="templates")
