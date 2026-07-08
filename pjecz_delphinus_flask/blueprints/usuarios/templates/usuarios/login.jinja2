@@ -1,0 +1,55 @@
+{% extends 'layouts/login.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block welcome %}
+    <div id="welcome" class="text-center">
+        <p><img class="img-fluid" src="https://storage.googleapis.com/pjecz-informatica/static/images/logo-login.png" alt="PJECZ"></p>
+        <h4 class="mb-3">{{ title }}</h4>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div id="access" class="py-2">
+        {% call f.form_tag('usuarios.login', fid='access_form') %}
+        <div id="access-form-firebase" class="my-2" style="display:none;">
+            <div class="form-floating">
+                {% call f.field(form.email, id='email', class='form-control', readonly='readonly') %}{% endcall %}
+                <label for="email">Correo electrónico</label>
+            </div>
+            <div class="form-floating">
+                {% call f.field(form.token, id='token', class='form-control', readonly='readonly') %}{% endcall %}
+                <label for="token">Token</label>
+            </div>
+            <button id="access-form-firebase-submit" class="w-100 btn btn-lg btn-primary my-2" type="submit">Ingresar</button>
+        </div>
+        <div id="access-form-password" class="my-2" style="display:none;">
+            <div class="form-floating">
+                {% call f.field(form.identidad, id='username', class='form-control', autofocus='autofocus') %}{% endcall %}
+                <label for="username">Usuario</label>
+            </div>
+            <div class="form-floating">
+                {% call f.field(form.contrasena, id='password', class='form-control') %}{% endcall %}
+                <label for="password">Contraseña</label>
+            </div>
+            <button id="access-form-password-submit" class="w-100 btn btn-lg btn-primary my-2" type="submit">Ingresar</button>
+        </div>
+        {% endcall %}
+        <div id="account" class="my-2" style="display:none;">
+            <div class="card">
+                <div class="card-body">
+                    <pre class="text-secondary"><code id="account-details"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block custom_javascript %}
+    <script>
+        window.onload = function() {
+            document.getElementById('access-form-password').style.display = 'inline';
+        };
+    </script>
+{% endblock %}
