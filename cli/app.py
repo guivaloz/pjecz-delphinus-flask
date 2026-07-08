@@ -1,5 +1,5 @@
 """
-PJECZ Hercules Beta Flask CLI
+PJECZ Delphinus Flask CLI
 """
 
 from typer import Typer

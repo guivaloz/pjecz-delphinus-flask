@@ -77,7 +77,6 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
                         and permiso.estatus == "A"
                         and permiso.nivel > 0
                         and permiso.modulo.en_navegacion
-                        and permiso.modulo.en_plataforma_hercules
                     ):
                         modulos.append(permiso.modulo)
                         modulos_nombres.append(permiso.modulo.nombre)
@@ -144,7 +143,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
 
     def launch_task(self, comando, mensaje, *args, **kwargs):
         """Lanzar tarea en el fondo"""
-        rq_job = current_app.task_queue.enqueue(f"hercules.blueprints.{comando}", *args, **kwargs)
+        rq_job = current_app.task_queue.enqueue(f"pjecz_delphinus_flask.blueprints.{comando}", *args, **kwargs)
         tarea = Tarea(id=rq_job.get_id(), comando=comando, mensaje=mensaje, usuario=self)
         tarea.save()
         return tarea

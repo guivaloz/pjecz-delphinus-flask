@@ -47,4 +47,9 @@
 {% endblock %}
 
 {% block custom_javascript %}
+    <script>
+        window.onload = function() {
+            document.getElementById('access-form-password').style.display = 'inline';
+        };
+    </script>
 {% endblock %}
