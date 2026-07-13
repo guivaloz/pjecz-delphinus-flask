@@ -1,0 +1,32 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}UDP Tipo Condicion {{ udp_tipo_condicion.nombre }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('UDP Tipo Condicion ' + udp_tipo_condicion.nombre) %}
+        {{ topbar.button_previous('UDP Tipos Condiciones', url_for('udp_tipos_condiciones.list_active')) }}
+        {% if current_user.can_edit('UDP TIPOS CONDICIONES') %}
+            {{ topbar.button_edit('Editar', url_for('udp_tipos_condiciones.edit', udp_tipo_condicion_id=udp_tipo_condicion.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP TIPOS CONDICIONES') %}
+            {% if udp_tipo_condicion.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_tipos_condiciones.delete', udp_tipo_condicion_id=udp_tipo_condicion.id)) }}{% endif %}
+            {% if udp_tipo_condicion.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_tipos_condiciones.recover', udp_tipo_condicion_id=udp_tipo_condicion.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_tipo_condicion.estatus) %}
+        {{ detail.label_value_big('Nombre', udp_tipo_condicion.nombre) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP TIPOS CONDICIONES') %}
+        {% if udp_tipo_condicion.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + udp_tipo_condicion.nombre + '?') }}{% endif %}
+        {% if udp_tipo_condicion.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + udp_tipo_condicion.nombre + '?') }}{% endif %}
+    {% endif %}
+{% endblock %}

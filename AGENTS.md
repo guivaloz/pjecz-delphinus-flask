@@ -31,8 +31,9 @@ basedpyright
 - **App factory**: `pjecz_delphinus_flask/app.py` creates Flask app, registers blueprints, inits extensions
 - **Blueprints** in `pjecz_delphinus_flask/blueprints/`: each has `views.py`, `models.py`, `forms.py`, `templates/`
 - **Models** in `pjecz_delphinus_flask/blueprints/models.py`: database models (SQLAlchemy) a class named in singular (e.g. `Usuario`, `Rol`)
-- **Views** in `pjecz_delphinus_flask/blueprints/views.py`: view functions (Flask views) for handling HTTP requests, the basic functions are `datatable_json`, `list_active`, `list_inactive`, `new`, `edit`, `delete` and `recover`
+- **Views** in `pjecz_delphinus_flask/blueprints/views.py`: view functions (Flask views) for handling HTTP requests, the basic functions are `datatable_json`, `list_active`, `list_inactive`, `detail`, `new`, `edit`, `delete` and `recover`
 - **Forms** in `pjecz_delphinus_flask/blueprints/forms.py`: form classes (Flask-WTF) for validating user input
+- **Templates** in `pjecz_delphinus_flask/blueprints/templates/`: HTML templates for rendering views written in Jinja2, inside `templates/` subdirectory is another subdirectory with the same name as the blueprint (e.g. `templates/usuarios/`), the basic templates are `list.html` (used by `datatable_json`, `list_active`, `list_inactive`), `detail.html`, `new.html` and `edit.html`
 - **CLI** in `cli/`: separate Typer app with `db` and `usuarios` subcommands
 - **Lib** in `pjecz_delphinus_flask/lib/`: shared utils (safe_string, datatables, cryptography, pwgen)
 - **Config** in `pjecz_delphinus_flask/config/`: `settings.py` (pydantic-settings), `extensions.py` (Flask extensions)

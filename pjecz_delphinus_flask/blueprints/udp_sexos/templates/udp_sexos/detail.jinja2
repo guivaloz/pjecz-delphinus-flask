@@ -1,0 +1,32 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}UDP Sexo {{ udp_sexo.nombre }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('UDP Sexo ' + udp_sexo.nombre) %}
+        {{ topbar.button_previous('UDP Sexos', url_for('udp_sexos.list_active')) }}
+        {% if current_user.can_edit('UDP SEXOS') %}
+            {{ topbar.button_edit('Editar', url_for('udp_sexos.edit', udp_sexo_id=udp_sexo.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP SEXOS') %}
+            {% if udp_sexo.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_sexos.delete', udp_sexo_id=udp_sexo.id)) }}{% endif %}
+            {% if udp_sexo.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_sexos.recover', udp_sexo_id=udp_sexo.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_sexo.estatus) %}
+        {{ detail.label_value_big('Nombre', udp_sexo.nombre) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP SEXOS') %}
+        {% if udp_sexo.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + udp_sexo.nombre + '?') }}{% endif %}
+        {% if udp_sexo.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + udp_sexo.nombre + '?') }}{% endif %}
+    {% endif %}
+{% endblock %}
