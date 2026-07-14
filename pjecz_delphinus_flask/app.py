@@ -8,7 +8,9 @@ from pjecz_delphinus_flask.blueprints.autoridades.views import autoridades
 from pjecz_delphinus_flask.blueprints.bitacoras.views import bitacoras
 from pjecz_delphinus_flask.blueprints.distritos.views import distritos
 from pjecz_delphinus_flask.blueprints.entradas_salidas.views import entradas_salidas
+from pjecz_delphinus_flask.blueprints.estados.views import estados
 from pjecz_delphinus_flask.blueprints.modulos.views import modulos
+from pjecz_delphinus_flask.blueprints.municipios.views import municipios
 from pjecz_delphinus_flask.blueprints.permisos.views import permisos
 from pjecz_delphinus_flask.blueprints.roles.views import roles
 from pjecz_delphinus_flask.blueprints.sistemas.views import sistemas
@@ -33,7 +35,9 @@ app.register_blueprint(autoridades)
 app.register_blueprint(bitacoras)
 app.register_blueprint(distritos)
 app.register_blueprint(entradas_salidas)
+app.register_blueprint(estados)
 app.register_blueprint(modulos)
+app.register_blueprint(municipios)
 app.register_blueprint(permisos)
 app.register_blueprint(roles)
 app.register_blueprint(sistemas)

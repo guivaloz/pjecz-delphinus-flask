@@ -17,7 +17,9 @@ from typer import Typer
 from pjecz_delphinus_flask.app import app
 from pjecz_delphinus_flask.blueprints.autoridades.models import Autoridad
 from pjecz_delphinus_flask.blueprints.distritos.models import Distrito
+from pjecz_delphinus_flask.blueprints.estados.models import Estado
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
+from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
 from pjecz_delphinus_flask.blueprints.roles.models import Rol
 from pjecz_delphinus_flask.blueprints.udp_sexos.models import UdpSexo
@@ -33,7 +35,9 @@ from pjecz_delphinus_flask.lib.safe_string import safe_clave, safe_email, safe_s
 # Rutas a los archivos CSV
 AUTORIDADES_CSV = "seed/autoridades.csv"
 DISTRITOS_CSV = "seed/distritos.csv"
+ESTADOS_CSV = "seed/estados.csv"
 MODULOS_CSV = "seed/modulos.csv"
+MUNICIPIOS_CSV = "seed/municipios.csv"
 PERMISOS_CSV = "seed/roles_permisos.csv"
 ROLES_CSV = "seed/roles_permisos.csv"
 USUARIOS_CSV = "seed/usuarios_roles.csv"
@@ -459,6 +463,74 @@ def alimentar_udp_tipos_visitas():
     console.print(f"[green]{contador} udp_tipos_visitas alimentados.")
 
 
+def alimentar_estados():
+    """Alimentar Estados"""
+    console = Console()
+    ruta = Path(ESTADOS_CSV)
+    if not ruta.exists():
+        console.print(f"[red]ERROR: {ruta.name} no se encontró.")
+        sys.exit(1)
+    if not ruta.is_file():
+        console.print(f"[red]ERROR: {ruta.name} no es un archivo.")
+        sys.exit(1)
+    console.print("Alimentando estados...")
+    contador = 0
+    with open(ruta, encoding="utf8") as puntero:
+        rows = csv.DictReader(puntero)
+        for row in rows:
+            estado_id = int(row["estado_id"])
+            clave = safe_string(row["clave"])
+            nombre = safe_string(row["nombre"], save_enie=True)
+            estatus = row["estatus"]
+            if estado_id != contador + 1:
+                console.print(f"[red]ERROR: estado_id {estado_id} no es consecutivo")
+                sys.exit(1)
+            Estado(
+                clave=clave,
+                nombre=nombre,
+                estatus=estatus,
+            ).save()
+            contador += 1
+    console.print(f"[green]{contador} estados alimentados.")
+
+
+def alimentar_municipios():
+    """Alimentar Municipios"""
+    console = Console()
+    ruta = Path(MUNICIPIOS_CSV)
+    if not ruta.exists():
+        console.print(f"[red]ERROR: {ruta.name} no se encontró.")
+        sys.exit(1)
+    if not ruta.is_file():
+        console.print(f"[red]ERROR: {ruta.name} no es un archivo.")
+        sys.exit(1)
+    console.print("Alimentando municipios...")
+    contador = 0
+    with open(ruta, encoding="utf8") as puntero:
+        rows = csv.DictReader(puntero)
+        for row in rows:
+            municipio_id = int(row["municipio_id"])
+            estado_id = int(row["estado_id"])
+            estado = Estado.query.get(estado_id)
+            if estado is None:
+                console.print(f"[red]ERROR: estado_id {estado_id} no existe")
+                sys.exit(1)
+            clave = safe_string(row["clave"])
+            nombre = safe_string(row["nombre"], save_enie=True)
+            estatus = row["estatus"]
+            if municipio_id != contador + 1:
+                console.print(f"[red]ERROR: municipio_id {municipio_id} no es consecutivo")
+                sys.exit(1)
+            Municipio(
+                estado=estado,
+                clave=clave,
+                nombre=nombre,
+                estatus=estatus,
+            ).save()
+            contador += 1
+    console.print(f"[green]{contador} municipios alimentados.")
+
+
 def respaldar_autoridades():
     """Respaldar Autoridades"""
     console = Console()
@@ -718,6 +790,42 @@ def respaldar_udp_tipos_visitas():
     console.print(f"[green]{contador} udp_tipos_visitas respaldados.")
 
 
+def respaldar_estados():
+    """Respaldar Estados"""
+    console = Console()
+    ruta = Path(ESTADOS_CSV)
+    if ruta.exists():
+        console.print(f"[red]ERROR: {ESTADOS_CSV} ya existe, no voy a sobreescribirlo.")
+        sys.exit(1)
+    console.print("Respaldando estados...")
+    contador = 0
+    with open(ruta, "w", encoding="utf8") as puntero:
+        respaldo = csv.writer(puntero)
+        respaldo.writerow(["estado_id", "clave", "nombre", "estatus"])
+        for estado in Estado.query.order_by(Estado.id).all():
+            respaldo.writerow([estado.id, estado.clave, estado.nombre, estado.estatus])
+            contador += 1
+    console.print(f"[green]{contador} estados respaldados.")
+
+
+def respaldar_municipios():
+    """Respaldar Municipios"""
+    console = Console()
+    ruta = Path(MUNICIPIOS_CSV)
+    if ruta.exists():
+        console.print(f"[red]ERROR: {MUNICIPIOS_CSV} ya existe, no voy a sobreescribirlo.")
+        sys.exit(1)
+    console.print("Respaldando municipios...")
+    contador = 0
+    with open(ruta, "w", encoding="utf8") as puntero:
+        respaldo = csv.writer(puntero)
+        respaldo.writerow(["municipio_id", "estado_id", "clave", "nombre", "estatus"])
+        for municipio in Municipio.query.order_by(Municipio.id).all():
+            respaldo.writerow([municipio.id, municipio.estado_id, municipio.clave, municipio.nombre, municipio.estatus])
+            contador += 1
+    console.print(f"[green]{contador} municipios respaldados.")
+
+
 @db.command()
 def inicializar():
     """Inicializar la base de datos"""
@@ -740,6 +848,8 @@ def alimentar():
     alimentar_modulos()
     alimentar_roles()
     alimentar_permisos()
+    alimentar_estados()
+    alimentar_municipios()
     alimentar_distritos()
     alimentar_autoridades()
     alimentar_usuarios()
@@ -763,7 +873,9 @@ def respaldar():
     """Respaldar la base de datos en archivos CSV"""
     respaldar_autoridades()
     respaldar_distritos()
+    respaldar_estados()
     respaldar_modulos()
+    respaldar_municipios()
     respaldar_roles_permisos()
     respaldar_usuarios_roles()
     respaldar_udp_sexos()
