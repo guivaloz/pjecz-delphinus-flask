@@ -1,0 +1,18 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Nuevo UDP Tipo Tramite{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Nuevo UDP Tipo Tramite') }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% call f.form_tag('udp_tipos_tramites.new', fid='udp_tipo_tramite_form') %}
+            {% call f.form_group(form.nombre) %}{% endcall %}
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}

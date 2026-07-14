@@ -8,11 +8,17 @@ from pjecz_delphinus_flask.blueprints.autoridades.views import autoridades
 from pjecz_delphinus_flask.blueprints.bitacoras.views import bitacoras
 from pjecz_delphinus_flask.blueprints.distritos.views import distritos
 from pjecz_delphinus_flask.blueprints.entradas_salidas.views import entradas_salidas
+from pjecz_delphinus_flask.blueprints.estados.views import estados
 from pjecz_delphinus_flask.blueprints.modulos.views import modulos
+from pjecz_delphinus_flask.blueprints.municipios.views import municipios
 from pjecz_delphinus_flask.blueprints.permisos.views import permisos
 from pjecz_delphinus_flask.blueprints.roles.views import roles
 from pjecz_delphinus_flask.blueprints.sistemas.views import sistemas
 from pjecz_delphinus_flask.blueprints.tareas.views import tareas
+from pjecz_delphinus_flask.blueprints.udp_sexos.views import udp_sexos
+from pjecz_delphinus_flask.blueprints.udp_tipos_condiciones.views import udp_tipos_condiciones
+from pjecz_delphinus_flask.blueprints.udp_tipos_tramites.views import udp_tipos_tramites
+from pjecz_delphinus_flask.blueprints.udp_tipos_visitas.views import udp_tipos_visitas
 from pjecz_delphinus_flask.blueprints.usuarios.models import Usuario
 from pjecz_delphinus_flask.blueprints.usuarios.views import usuarios
 from pjecz_delphinus_flask.blueprints.usuarios_roles.views import usuarios_roles
@@ -29,13 +35,19 @@ app.register_blueprint(autoridades)
 app.register_blueprint(bitacoras)
 app.register_blueprint(distritos)
 app.register_blueprint(entradas_salidas)
+app.register_blueprint(estados)
 app.register_blueprint(modulos)
+app.register_blueprint(municipios)
 app.register_blueprint(permisos)
 app.register_blueprint(roles)
 app.register_blueprint(sistemas)
 app.register_blueprint(tareas)
 app.register_blueprint(usuarios)
 app.register_blueprint(usuarios_roles)
+app.register_blueprint(udp_sexos)
+app.register_blueprint(udp_tipos_condiciones)
+app.register_blueprint(udp_tipos_tramites)
+app.register_blueprint(udp_tipos_visitas)
 
 # Inicializar extensiones
 csrf.init_app(app)

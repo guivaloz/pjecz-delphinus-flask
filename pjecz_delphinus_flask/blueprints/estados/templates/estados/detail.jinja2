@@ -1,0 +1,83 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Estado {{ estado.nombre }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Estado ' + estado.nombre) %}
+        {{ topbar.button_previous('Estados', url_for('estados.list_active')) }}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=estado.estatus) %}
+        {{ detail.label_value('Clave', estado.clave) }}
+        {{ detail.label_value('Nombre', estado.nombre) }}
+    {% endcall %}
+    {% if current_user.can_view('MUNICIPIOS') %}
+        {% call detail.card('Municipios') %}
+            <!-- Filtros municipios -->
+            <div class="row">
+                <div class="col">
+                    <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosMunicipios.buscar(); return false;">
+                        <div class="col-6">
+                            <div class="form-floating">
+                                <input id="filtroMunicipioNombre" type="text" class="form-control" aria-label="Nombre" style="text-transform: uppercase;">
+                                <label for="filtroMunicipioNombre">Nombre</label>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosMunicipios.buscar(); return false;" id="button-buscar"><span class="mdi mdi-magnify"></span></button>
+                            <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosMunicipios.limpiar();" id="button-limpiar"><span class="mdi mdi-broom"></span></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Datatable municipios -->
+            <table id="municipios_datatable" class="table display nowrap" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Clave</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+            </table>
+        {% endcall %}
+    {% endif %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <!-- Constructor de DataTables -->
+    <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
+    <script>
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+    </script>
+    <!-- Municipios de la Estado -->
+    {% if current_user.can_view('MUNICIPIOS') %}
+        <script>
+            // DataTable Municipios
+            let configDTMunicipios = constructorDataTable.config();
+            configDTMunicipios['ajax']['url'] = "{{ url_for('municipios.datatable_json') }}";
+            configDTMunicipios['ajax']['data'] = { estatus: "A", estado_id: '{{ estado.id }}' };
+            configDTMunicipios['columns'] = [
+                { data: 'detalle' },
+                { data: 'nombre' }
+            ];
+            configDTMunicipios['columnDefs'] = [
+                {
+                    targets: 0, // detalle
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.clave + '</a>';
+                    }
+                }
+            ];
+            // Filtros Municipios
+            const filtrosMunicipios = new FiltrosDataTable('#municipios_datatable', configDTMunicipios);
+            filtrosMunicipios.agregarInput('filtroMunicipioNombre', 'nombre');
+            filtrosMunicipios.precargar();
+        </script>
+    {% endif %}
+{% endblock %}
