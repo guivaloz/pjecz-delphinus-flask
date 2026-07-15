@@ -3,15 +3,15 @@ UDP Personas Domicilios, formularios
 """
 
 from flask_wtf import FlaskForm
-from wtforms import SelectField, StringField, SubmitField, TextAreaField
-from wtforms.validators import Length, Optional
+from wtforms import IntegerField, SelectField, StringField, SubmitField, TextAreaField
+from wtforms.validators import DataRequired, Length, Optional
 
 
 class UdpPersonaDomicilioForm(FlaskForm):
     """Formulario UdpPersonaDomicilio"""
 
     municipio = SelectField("Municipio", choices=None, validate_choice=False)
-    calle = StringField("Calle", validators=[Optional(), Length(max=256)])
+    calle = StringField("Calle", validators=[DataRequired(), Length(max=256)])
     num_exterior = StringField("Número Exterior", validators=[Optional(), Length(max=64)])
     num_interior = StringField("Número Interior", validators=[Optional(), Length(max=64)])
     colonia = StringField("Colonia", validators=[Optional(), Length(max=256)])

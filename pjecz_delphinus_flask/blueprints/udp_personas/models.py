@@ -36,10 +36,11 @@ class UdpPersona(database.Model, UniversalMixin):
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 
     # Hijos
-    domicilios: Mapped[List["UdpPersonaDomicilio"]] = relationship(back_populates="udp_persona")
-    ingresos: Mapped[List["UdpPersonaIngreso"]] = relationship(back_populates="udp_persona")
-    contrapartes: Mapped[List["UdpPersonaContraparte"]] = relationship(back_populates="udp_persona")
-    atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="udp_persona")
+    udp_personas_atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="udp_persona")
+    udp_personas_contrapartes: Mapped[List["UdpPersonaContraparte"]] = relationship(back_populates="udp_persona")
+    udp_personas_domicilios: Mapped[List["UdpPersonaDomicilio"]] = relationship(back_populates="udp_persona")
+    udp_personas_ingresos: Mapped[List["UdpPersonaIngreso"]] = relationship(back_populates="udp_persona")
+    udp_personas_visitas: Mapped[List["UdpPersonaVisita"]] = relationship(back_populates="udp_persona")
 
     @property
     def nombre_completo(self):

@@ -23,11 +23,11 @@ class UdpPersonaIngreso(database.Model, UniversalMixin):
 
     # Claves foráneas
     udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
-    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="ingresos")
+    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_personas_ingresos")
 
     # Columnas
-    ocupacion: Mapped[Optional[str]] = mapped_column(String(256), default="", server_default="")
-    ingresos: Mapped[Optional[Decimal]] = mapped_column(Numeric(precision=10, scale=2))
+    ocupacion: Mapped[str] = mapped_column(String(256), default="", server_default="")
+    ingresos: Mapped[Decimal] = mapped_column(Numeric(precision=10, scale=2))
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 
     def __repr__(self):

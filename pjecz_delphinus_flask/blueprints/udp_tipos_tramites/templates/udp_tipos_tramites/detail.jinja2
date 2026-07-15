@@ -3,11 +3,11 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}UDP Tipo Tramite {{ udp_tipo_tramite.nombre }}{% endblock %}
+{% block title %}Tipo Trámite {{ udp_tipo_tramite.nombre }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('UDP Tipo Tramite ' + udp_tipo_tramite.nombre) %}
-        {{ topbar.button_previous('UDP Tipos Tramites', url_for('udp_tipos_tramites.list_active')) }}
+    {% call topbar.page_buttons('Tipo Trámite ' + udp_tipo_tramite.nombre) %}
+        {{ topbar.button_previous('Tipos Trámites', url_for('udp_tipos_tramites.list_active')) }}
         {% if current_user.can_edit('UDP TIPOS TRAMITES') %}
             {{ topbar.button_edit('Editar', url_for('udp_tipos_tramites.edit', udp_tipo_tramite_id=udp_tipo_tramite.id)) }}
         {% endif %}
@@ -20,7 +20,7 @@
 
 {% block content %}
     {% call detail.card(estatus=udp_tipo_tramite.estatus) %}
-        {{ detail.label_value_big('Nombre', udp_tipo_tramite.nombre) }}
+        {{ detail.label_value('Nombre', udp_tipo_tramite.nombre) }}
     {% endcall %}
 {% endblock %}
 

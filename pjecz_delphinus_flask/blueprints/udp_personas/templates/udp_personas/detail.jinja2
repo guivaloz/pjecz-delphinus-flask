@@ -3,7 +3,7 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}UDP Persona {{ udp_persona.nombre_completo }}{% endblock %}
+{% block title %}Persona {{ udp_persona.nombre_completo }}{% endblock %}
 
 {% block topbar_actions %}
     {% call topbar.page_buttons('UDP Persona ' + udp_persona.nombre_completo) %}
@@ -22,13 +22,13 @@
     {% call detail.card(estatus=udp_persona.estatus) %}
         <div class="row">
             <div class="col-md-6">
-                {{ detail.label_value_big('Nombre Completo', udp_persona.nombre_completo) }}
+                {{ detail.label_value('Nombre Completo', udp_persona.nombre_completo) }}
+                {{ detail.label_value('F. Nacimiento', udp_persona.nacimiento_fecha | string if udp_persona.nacimiento_fecha else '') }}
                 {{ detail.label_value('Sexo', udp_persona.udp_sexo.nombre) }}
-                {{ detail.label_value('Tipo de Condición', udp_persona.udp_tipo_condicion.nombre) }}
                 {{ detail.label_value('CURP', udp_persona.curp) }}
             </div>
             <div class="col-md-6">
-                {{ detail.label_value('Fecha de Nacimiento', udp_persona.nacimiento_fecha | string if udp_persona.nacimiento_fecha else '') }}
+                {{ detail.label_value('Tipo de Condición', udp_persona.udp_tipo_condicion.nombre) }}
                 {{ detail.label_value('Observaciones', udp_persona.observaciones) }}
             </div>
         </div>
@@ -99,6 +99,22 @@
                 </table>
                 {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
                     <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
+            {% call detail.card('Visitas') %}
+                <table id="visitas_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo Visita</th>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
+                    <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
@@ -210,6 +226,29 @@
                 ];
                 const filtrosDTAtenciones = new FiltrosDataTable('#atenciones_datatable', configDTAtenciones);
                 filtrosDTAtenciones.precargar();
+            </script>
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
+            <script>
+                let configDTVisitas = constructorDataTable.config();
+                configDTVisitas['ajax']['url'] = "{{ url_for('udp_personas_visitas.datatable_json') }}";
+                configDTVisitas['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+                configDTVisitas['columns'] = [
+                    { data: 'detalle' },
+                    { data: 'udp_tipo_visita_nombre' },
+                    { data: 'usuario_email' }
+                ];
+                configDTVisitas['columnDefs'] = [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
+                        }
+                    }
+                ];
+                const filtrosDTVisitas = new FiltrosDataTable('#visitas_datatable', configDTVisitas);
+                filtrosDTVisitas.precargar();
             </script>
         {% endif %}
     {% endif %}

@@ -82,7 +82,7 @@ def list_active():
     return render_template(
         "udp_personas/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
-        titulo="UDP Personas",
+        titulo="Personas",
         estatus="A",
     )
 
@@ -94,7 +94,7 @@ def list_inactive():
     return render_template(
         "udp_personas/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
-        titulo="UDP Personas inactivos",
+        titulo="Personas eliminadas",
         estatus="B",
     )
 

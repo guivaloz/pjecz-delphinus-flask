@@ -23,7 +23,7 @@ class UdpPersonaContraparte(database.Model, UniversalMixin):
 
     # Claves foráneas
     udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
-    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="contrapartes")
+    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_personas_contrapartes")
 
     # Columnas
     nombres: Mapped[str] = mapped_column(String(256))

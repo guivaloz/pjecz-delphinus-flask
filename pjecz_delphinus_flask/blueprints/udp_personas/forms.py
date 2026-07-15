@@ -16,6 +16,6 @@ class UdpPersonaForm(FlaskForm):
     apellido_primero = StringField("Apellido Primero", validators=[DataRequired(), Length(max=256)])
     apellido_segundo = StringField("Apellido Segundo", validators=[Optional(), Length(max=256)])
     curp = StringField("CURP", validators=[Optional(), Length(max=18)])
-    nacimiento_fecha = DateField("Fecha de Nacimiento", validators=[Optional()])
+    nacimiento_fecha = DateField("F. Nacimiento", validators=[Optional()])
     observaciones = TextAreaField("Observaciones", validators=[Optional(), Length(max=1024)])
     guardar = SubmitField("Guardar")

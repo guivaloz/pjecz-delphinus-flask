@@ -162,10 +162,10 @@
         // DataTable últimas personas
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDTUltimasPersonas = constructorDataTable.config();
-        configDTUltimasPersonas['ajax']['url'] = "{{ url_for('sistemas.ultimas_personas_json') }}";
+        configDTUltimasPersonas['ajax']['url'] = "{{ url_for('sistemas.ultimas_personas_datatable_json') }}";
         configDTUltimasPersonas['ajax']['data'] = { 'estatus': 'A' };
         configDTUltimasPersonas['columns'] = [
-            { data: 'nombre_completo' },
+            { data: 'detalle' },
             { data: 'curp' },
             { data: 'nacimiento_fecha' },
             { data: 'udp_sexo_nombre' }

@@ -20,17 +20,11 @@
 
 {% block content %}
     {% call detail.card(estatus=udp_persona_contraparte.estatus) %}
-        <div class="row">
-            <div class="col-md-6">
-                {{ detail.label_value_big('Nombre Completo', udp_persona_contraparte.nombre_completo) }}
-                {{ detail.label_value('Persona', udp_persona_contraparte.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_contraparte.udp_persona_id)) }}
-                {{ detail.label_value('CURP', udp_persona_contraparte.curp) }}
-            </div>
-            <div class="col-md-6">
-                {{ detail.label_value('Fecha de Nacimiento', udp_persona_contraparte.nacimiento_fecha | string if udp_persona_contraparte.nacimiento_fecha else '') }}
-                {{ detail.label_value('Observaciones', udp_persona_contraparte.observaciones) }}
-            </div>
-        </div>
+        {{ detail.label_value('Nombre Completo', udp_persona_contraparte.nombre_completo) }}
+        {{ detail.label_value('CURP', udp_persona_contraparte.curp) }}
+        {{ detail.label_value('Fecha de Nacimiento', udp_persona_contraparte.nacimiento_fecha | string if udp_persona_contraparte.nacimiento_fecha else '') }}
+        {{ detail.label_value('Contraparte de Persona', udp_persona_contraparte.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_contraparte.udp_persona_id)) }}
+        {{ detail.label_value('Observaciones', udp_persona_contraparte.observaciones) }}
     {% endcall %}
 {% endblock %}
 

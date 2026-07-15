@@ -2,10 +2,10 @@
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Editar UDP Tipo Visita {{ udp_tipo_visita.nombre }}{% endblock %}
+{% block title %}Editar Tipo Visita {{ udp_tipo_visita.nombre }}{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Editar UDP Tipo Visita ' + udp_tipo_visita.nombre) }}
+    {{ topbar.page('Editar Tipo Visita ' + udp_tipo_visita.nombre) }}
 {% endblock %}
 
 {% block content %}

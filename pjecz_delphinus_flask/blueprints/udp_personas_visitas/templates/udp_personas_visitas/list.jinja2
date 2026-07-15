@@ -9,6 +9,9 @@
         {% if current_user.can_view('UDP PERSONAS') %}
             {{ topbar.button('Personas', url_for('udp_personas.list_active'), 'mdi mdi-account') }}
         {% endif %}
+        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+            {{ topbar.button('Atenciones', url_for('udp_personas_atenciones.list_active'), 'mdi mdi-clipboard-check') }}
+        {% endif %}
         {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
             {{ topbar.button('Contrapartes', url_for('udp_personas_contrapartes.list_active'), 'mdi mdi-account-multiple') }}
         {% endif %}
@@ -18,26 +21,21 @@
         {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
             {{ topbar.button('Ingresos', url_for('udp_personas_ingresos.list_active'), 'mdi mdi-cash') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
-            {{ topbar.button('Visitas', url_for('udp_personas_visitas.list_active'), 'mdi mdi-car') }}
-        {% endif %}
-        {% if current_user.can_admin('UDP PERSONAS ATENCIONES') %}
-            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_personas_atenciones.list_inactive')) }}{% endif %}
-            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_personas_atenciones.list_active')) }}{% endif %}
+        {% if current_user.can_admin('UDP PERSONAS VISITAS') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_personas_visitas.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_personas_visitas.list_active')) }}{% endif %}
         {% endif %}
     {% endcall %}
 {% endblock %}
 
 {% block content %}
     {% call list.card() %}
-        <table id="udp_personas_atenciones_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+        <table id="udp_personas_visitas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tipo Trámite</th>
+                    <th>Tipo Visita</th>
                     <th>Usuario</th>
-                    <th>Autoridad</th>
-                    <th>Expediente</th>
                 </tr>
             </thead>
         </table>
@@ -50,14 +48,12 @@
     <script>
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
         let configDT = constructorDataTable.config();
-        configDT['ajax']['url'] = "{{ url_for('udp_personas_atenciones.datatable_json') }}";
+        configDT['ajax']['url'] = "{{ url_for('udp_personas_visitas.datatable_json') }}";
         configDT['ajax']['data'] = {{ filtros }};
         configDT['columns'] = [
             { data: 'detalle' },
-            { data: 'udp_tipo_tramite_nombre' },
-            { data: 'usuario_email' },
-            { data: 'autoridad_clave' },
-            { data: 'expediente' }
+            { data: 'udp_tipo_visita_nombre' },
+            { data: 'usuario_email' }
         ];
         configDT['columnDefs'] = [
             {

@@ -2,10 +2,12 @@
 Sistemas
 """
 
-from flask import Blueprint, redirect, render_template, send_from_directory, url_for
+from flask import Blueprint, redirect, render_template, request, send_from_directory, url_for
 from flask_login import current_user, login_required
 
+from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
+from pjecz_delphinus_flask.lib.safe_string import safe_string
 
 sistemas = Blueprint("sistemas", __name__, template_folder="templates")
 
@@ -23,22 +25,39 @@ def start():
     return redirect("/login")
 
 
-@sistemas.route("/sistemas/ultimas_personas_json", methods=["GET", "POST"])
+@sistemas.route("/sistemas/ultimas_personas_datatable_json", methods=["GET", "POST"])
 @login_required
-def ultimas_personas_json():
+def ultimas_personas_datatable_json():
     """DataTable JSON para las últimas 10 personas agregadas"""
-    from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
-
     draw, start, rows_per_page = get_datatable_parameters()
-    consulta = UdpPersona.query.filter_by(estatus="A")
+    consulta = UdpPersona.query
+    consulta = consulta.filter_by(estatus="A")
+    if "nombres" in request.form:
+        nombres = safe_string(request.form["nombres"], save_enie=True)
+        if nombres != "":
+            consulta = consulta.filter(UdpPersona.nombres.contains(nombres))
+    if "apellido_primero" in request.form:
+        apellido_primero = safe_string(request.form["apellido_primero"], save_enie=True)
+        if apellido_primero != "":
+            consulta = consulta.filter(UdpPersona.apellido_primero.contains(apellido_primero))
+    if "apellido_segundo" in request.form:
+        apellido_segundo = safe_string(request.form["apellido_segundo"], save_enie=True)
+        if apellido_segundo != "":
+            consulta = consulta.filter(UdpPersona.apellido_segundo.contains(apellido_segundo))
+    if "curp" in request.form:
+        curp = safe_string(request.form["curp"])
+        if curp != "":
+            consulta = consulta.filter(UdpPersona.curp.contains(curp))
     registros = consulta.order_by(UdpPersona.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     data = []
     for resultado in registros:
         data.append(
             {
-                "nombre_completo": resultado.nombre_completo,
-                "url": url_for("udp_personas.detail", udp_persona_id=resultado.id),
+                "detalle": {
+                    "nombre_completo": resultado.nombre_completo,
+                    "url": url_for("udp_personas.detail", udp_persona_id=resultado.id),
+                },
                 "curp": resultado.curp or "",
                 "nacimiento_fecha": resultado.nacimiento_fecha.strftime("%Y-%m-%d") if resultado.nacimiento_fecha else "",
                 "udp_sexo_nombre": resultado.udp_sexo.nombre,

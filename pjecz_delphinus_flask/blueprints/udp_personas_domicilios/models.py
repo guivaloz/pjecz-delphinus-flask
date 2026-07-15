@@ -22,12 +22,12 @@ class UdpPersonaDomicilio(database.Model, UniversalMixin):
 
     # Claves foráneas
     udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
-    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="domicilios")
+    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_personas_domicilios")
     municipio_id: Mapped[int] = mapped_column(ForeignKey("municipios.id"))
-    municipio: Mapped["Municipio"] = relationship()
+    municipio: Mapped["Municipio"] = relationship(back_populates="udp_personas_domicilios")
 
     # Columnas
-    calle: Mapped[Optional[str]] = mapped_column(String(256), default="", server_default="")
+    calle: Mapped[str] = mapped_column(String(256), default="", server_default="")
     num_exterior: Mapped[Optional[str]] = mapped_column(String(64), default="", server_default="")
     num_interior: Mapped[Optional[str]] = mapped_column(String(64), default="", server_default="")
     colonia: Mapped[Optional[str]] = mapped_column(String(256), default="", server_default="")

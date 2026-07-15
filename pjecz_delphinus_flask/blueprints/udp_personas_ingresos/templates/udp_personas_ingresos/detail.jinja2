@@ -20,16 +20,10 @@
 
 {% block content %}
     {% call detail.card(estatus=udp_persona_ingreso.estatus) %}
-        <div class="row">
-            <div class="col-md-6">
-                {{ detail.label_value('Persona', udp_persona_ingreso.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_ingreso.udp_persona_id)) }}
-                {{ detail.label_value('Ocupación', udp_persona_ingreso.ocupacion) }}
-            </div>
-            <div class="col-md-6">
-                {{ detail.label_value('Ingresos', udp_persona_ingreso.ingresos | string if udp_persona_ingreso.ingresos else '') }}
-                {{ detail.label_value('Observaciones', udp_persona_ingreso.observaciones) }}
-            </div>
-        </div>
+        {{ detail.label_value('Persona', udp_persona_ingreso.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_ingreso.udp_persona_id)) }}
+        {{ detail.label_value('Ocupación', udp_persona_ingreso.ocupacion) }}
+        {{ detail.label_value('Ingresos', udp_persona_ingreso.ingresos | string if udp_persona_ingreso.ingresos else '') }}
+        {{ detail.label_value('Observaciones', udp_persona_ingreso.observaciones) }}
     {% endcall %}
 {% endblock %}
 

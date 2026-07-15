@@ -12,16 +12,10 @@
     {% call f.card() %}
         {% set form_kwargs = {'udp_persona_id': udp_persona.id} %}
         {% call f.form_tag('udp_personas_atenciones.new', fid='atencion_form', **form_kwargs) %}
-            <div class="row">
-                <div class="col-md-6">
-                    {% call f.form_group(form.udp_tipo_tramite) %}{% endcall %}
-                    {% call f.form_group(form.autoridad) %}{% endcall %}
-                </div>
-                <div class="col-md-6">
-                    {% call f.form_group(form.expediente) %}{% endcall %}
-                    {% call f.form_group(form.observaciones) %}{% endcall %}
-                </div>
-            </div>
+            {% call f.form_group(form.udp_tipo_tramite) %}{% endcall %}
+            {% call f.form_group(form.autoridad) %}{% endcall %}
+            {% call f.form_group(form.expediente) %}{% endcall %}
+            {% call f.form_group(form.observaciones) %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}
     {% endcall %}

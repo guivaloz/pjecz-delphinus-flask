@@ -21,14 +21,14 @@ class UdpPersonaAtencion(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Claves foráneas
-    udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
-    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="atenciones")
-    udp_tipo_tramite_id: Mapped[int] = mapped_column(ForeignKey("udp_tipos_tramites.id"))
-    udp_tipo_tramite: Mapped["UdpTipoTramite"] = relationship()
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
-    usuario: Mapped["Usuario"] = relationship()
     autoridad_id: Mapped[int] = mapped_column(ForeignKey("autoridades.id"))
-    autoridad: Mapped["Autoridad"] = relationship()
+    autoridad: Mapped["Autoridad"] = relationship(back_populates="udp_personas_atenciones")
+    udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
+    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_personas_atenciones")
+    udp_tipo_tramite_id: Mapped[int] = mapped_column(ForeignKey("udp_tipos_tramites.id"))
+    udp_tipo_tramite: Mapped["UdpTipoTramite"] = relationship(back_populates="udp_personas_atenciones")
+    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
+    usuario: Mapped["Usuario"] = relationship(back_populates="udp_personas_atenciones")
 
     # Columnas
     expediente: Mapped[Optional[str]] = mapped_column(String(32), default="", server_default="")
