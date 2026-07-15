@@ -13,6 +13,7 @@
         {% set form_kwargs = {'udp_persona_id': udp_persona.id} %}
         {% call f.form_tag('udp_personas_atenciones.new', fid='atencion_form', **form_kwargs) %}
             {% call f.form_group(form.udp_tipo_tramite) %}{% endcall %}
+            {% call f.form_group(form.distrito) %}{% endcall %}
             {% call f.form_group(form.autoridad) %}{% endcall %}
             {% call f.form_group(form.expediente) %}{% endcall %}
             {% call f.form_group(form.observaciones) %}{% endcall %}
@@ -22,9 +23,9 @@
 {% endblock %}
 
 {% block custom_javascript %}
+    <!-- Select udp_tipo_tramite -->
     <script>
         const udpTipoTramiteSelect = document.getElementById('udp_tipo_tramite');
-        const autoridadSelect = document.getElementById('autoridad');
         // Cargar las opciones del select udp_tipo_tramite
         fetch("{{ url_for('udp_tipos_tramites.select_json') }}")
             .then(response => response.json())
@@ -36,16 +37,40 @@
                     udpTipoTramiteSelect.appendChild(option);
                 });
             });
-        // Cargar las opciones del select autoridad
-        fetch("{{ url_for('autoridades.select_json') }}")
+    </script>
+    <!-- Select Distrito-Autoridad -->
+    <script>
+        const distritoSelect = document.getElementById('distrito');
+        const autoridadSelect = document.getElementById('autoridad');
+        // Cargar las opciones del select distrito
+        fetch("{{ url_for('distritos.select_json') }}")
             .then(response => response.json())
             .then(data => {
-                data.forEach(item => {
+                data.results.forEach(item => {
                     const option = document.createElement('option');
                     option.value = item.id;
-                    option.text = item.descripcion_corta;
-                    autoridadSelect.appendChild(option);
+                    option.text = item.text;
+                    distritoSelect.appendChild(option);
                 });
+                distritoSelect.value = {{ distrito_por_defecto.id }}; // Seleccionar el distrito por defecto
+                distritoSelect.dispatchEvent(new Event('change'));
             });
+        // Cargar las opciones del select autoridad, si el distrito cambia
+        distritoSelect.addEventListener('change', () => {
+            fetch(`{{ url_for('autoridades.select_json') }}?distrito_id=${distritoSelect.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    autoridadSelect.innerHTML = '';
+                    data.results.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.text = item.text;
+                        autoridadSelect.appendChild(option);
+                    });
+                    if (distritoSelect.value == {{ distrito_por_defecto.id }}) {
+                        autoridadSelect.value = {{ autoridad_por_defecto.id }}; // Seleccionar la autoridad por defecto
+                    }
+                });
+        });
     </script>
 {% endblock %}

@@ -220,9 +220,7 @@ def recover(distrito_id):
 @distritos.route("/distritos/select_json", methods=["GET", "POST"])
 def select_json():
     """Proporcionar el JSON con los ids, nombres para elegir con un select"""
-    # Consultar
-    consulta = Distrito.query.filter_by(estatus="A").order_by(Distrito.nombre)
-    # Filtrar
+    consulta = Distrito.query.filter_by(estatus="A")
     if "es_distrito_judicial" in request.args:
         es_distrito_judicial = request.args["es_distrito_judicial"] == "true"
         consulta = consulta.filter_by(es_distrito_judicial=es_distrito_judicial)
@@ -232,14 +230,6 @@ def select_json():
     if "es_jurisdiccional" in request.args:
         es_jurisdiccional = request.args["es_jurisdiccional"] == "true"
         consulta = consulta.filter_by(es_jurisdiccional=es_jurisdiccional)
-    # Elaborar datos para Select
-    data = []
-    for resultado in consulta.all():
-        data.append(
-            {
-                "id": resultado.id,
-                "nombre": resultado.nombre,
-            }
-        )
-    # Entregar JSON
-    return json.dumps(data)
+    consulta = consulta.order_by(Distrito.nombre).all()
+    resultados = [{"id": d.id, "text": f"{d.clave}: {d.nombre}"} for d in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

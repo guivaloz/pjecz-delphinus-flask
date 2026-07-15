@@ -21,6 +21,7 @@
                 <div class="col-md-6">
                     {% call f.form_group(form.colonia) %}{% endcall %}
                     {% call f.form_group(form.codigo_postal) %}{% endcall %}
+                    {% call f.form_group(form.estado) %}{% endcall %}
                     {% call f.form_group(form.municipio) %}{% endcall %}
                     {% call f.form_group(form.referencias) %}{% endcall %}
                 </div>
@@ -31,18 +32,37 @@
 {% endblock %}
 
 {% block custom_javascript %}
+    <!-- Select estado-municipio -->
     <script>
+        const estadoSelect = document.getElementById('estado');
         const municipioSelect = document.getElementById('municipio');
-        fetch("{{ url_for('municipios.select_json') }}")
+        // Cargar las opciones del select estado
+        fetch("{{ url_for('estados.select_json') }}")
             .then(response => response.json())
             .then(data => {
                 data.results.forEach(item => {
                     const option = document.createElement('option');
                     option.value = item.id;
                     option.text = item.text;
-                    municipioSelect.appendChild(option);
+                    estadoSelect.appendChild(option);
                 });
-                municipioSelect.value = {{ udp_persona_domicilio.municipio_id }};
+                estadoSelect.value = {{ udp_persona_domicilio.municipio.estado_id }}; // Seleccionar el estado
+                estadoSelect.dispatchEvent(new Event('change'));
             });
+        // Cargar las opciones del select municipio, si el estado cambia
+        estadoSelect.addEventListener('change', () => {
+            fetch(`{{ url_for('municipios.select_json') }}?estado_id=${estadoSelect.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    municipioSelect.innerHTML = '';
+                    data.results.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.text = item.text;
+                        municipioSelect.appendChild(option);
+                    });
+                    municipioSelect.value = {{ udp_persona_domicilio.municipio_id }}; // Seleccionar el municipio
+                });
+        });
     </script>
 {% endblock %}

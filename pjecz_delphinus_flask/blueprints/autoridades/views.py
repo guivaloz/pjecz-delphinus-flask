@@ -238,45 +238,15 @@ def recover(autoridad_id):
 @autoridades.route("/autoridades/select_json", methods=["GET", "POST"])
 def select_json():
     """Proporcionar el JSON con los ids, descripciones cortas para elegir con un select"""
-    # Consultar
     consulta = Autoridad.query.filter_by(estatus="A")
-    # Filtrar
     if "distrito_id" in request.args:
         distrito_id = request.args["distrito_id"]
         consulta = consulta.filter_by(distrito_id=distrito_id)
-    # Ordenar
-    consulta = consulta.order_by(Autoridad.descripcion_corta)
-    # Elaborar datos para Select
+    consulta = consulta.order_by(Autoridad.descripcion_corta).all()
     data = []
-    for resultado in consulta.all():
-        data.append(
-            {
-                "id": resultado.id,
-                "descripcion_corta": resultado.descripcion_corta,
-            }
-        )
-    # Entregar JSON
+    for resultado in consulta:
+        data.append({"id": resultado.id,"text": resultado.descripcion_corta})
     return json.dumps(data)
-
-
-@autoridades.route("/autoridades/select_json", methods=["GET", "POST"])
-def select_autoridades_json():
-    """Proporcionar el JSON de autoridades para elegir con un Select"""
-    # Consultar
-    consulta = Autoridad.query.filter(Autoridad.estatus == "A")
-    if "clave" in request.form:
-        clave = safe_clave(request.form["clave"])
-        if clave != "":
-            consulta = consulta.filter(or_(Autoridad.clave.contains(clave), Autoridad.descripcion_corta.contains(clave)))
-    results = []
-    for autoridad in consulta.order_by(Autoridad.id).limit(15).all():
-        results.append(
-            {
-                "id": autoridad.id,
-                "text": autoridad.clave + "  : " + autoridad.descripcion_corta,
-            }
-        )
-    return {"results": results, "pagination": {"more": False}}
 
 
 @autoridades.route("/autoridades/select2_json", methods=["GET", "POST"])
@@ -287,7 +257,6 @@ def select2_json():
         clave = safe_clave(request.form["searchString"])
         if clave != "":
             consulta = consulta.filter(Autoridad.clave.contains(clave))
-    resultados = []
-    for autoridad in consulta.order_by(Autoridad.clave).limit(10).all():
-        resultados.append({"id": autoridad.id, "text": f"{autoridad.clave}: {autoridad.descripcion_corta}"})
+    consulta = consulta.order_by(Autoridad.clave).limit(10).all()
+    resultados = [{"id": a.id, "text": f"{a.clave}: {a.descripcion_corta}"} for a in consulta]
     return {"results": resultados, "pagination": {"more": False}}

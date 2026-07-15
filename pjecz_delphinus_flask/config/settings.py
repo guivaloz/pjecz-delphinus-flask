@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     """Settings"""
 
     # Variables de entorno
+    ESTADO_CLAVE: str = get_secret("ESTADO_CLAVE")
+    MUNICIPIO_CLAVE: str = get_secret("MUNICIPIO_CLAVE")
     SALT: str = get_secret("SALT")
     SECRET_KEY: str = get_secret("SECRET_KEY")
     SQLALCHEMY_DATABASE_URI: str = get_secret("SQLALCHEMY_DATABASE_URI")

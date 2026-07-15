@@ -4,10 +4,12 @@ UDP Personas Domicilios, vistas
 
 import json
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from pjecz_delphinus_flask.blueprints.bitacoras.models import Bitacora
+from pjecz_delphinus_flask.blueprints.estados.models import Estado
+from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
 from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
@@ -116,7 +118,18 @@ def new(udp_persona_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
-    return render_template("udp_personas_domicilios/new.jinja2", form=form, udp_persona=udp_persona)
+    estado_por_defecto = Estado.query.filter_by(clave=current_app.config["ESTADO_CLAVE"]).first()
+    if estado_por_defecto:
+        municipio_por_defecto = Municipio.query.filter_by(estado_id=estado_por_defecto.id, clave=current_app.config["MUNICIPIO_CLAVE"]).first()
+    else:
+        municipio_por_defecto = None
+    return render_template(
+        "udp_personas_domicilios/new.jinja2",
+        form=form,
+        udp_persona=udp_persona,
+        estado_por_defecto=estado_por_defecto,
+        municipio_por_defecto=municipio_por_defecto,
+    )
 
 
 @udp_personas_domicilios.route("/udp_personas_domicilios/edicion/<int:udp_persona_domicilio_id>", methods=["GET", "POST"])

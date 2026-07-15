@@ -158,14 +158,6 @@ def delete(udp_tipo_condicion_id):
     return redirect(url_for("udp_tipos_condiciones.detail", udp_tipo_condicion_id=udp_tipo_condicion.id))
 
 
-@udp_tipos_condiciones.route("/udp_tipos_condiciones/select_json", methods=["GET", "POST"])
-def select_json():
-    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
-    consulta = UdpTipoCondicion.query.filter_by(estatus="A")
-    resultados = [{"id": s.id, "text": s.nombre} for s in consulta.order_by(UdpTipoCondicion.nombre).all()]
-    return {"results": resultados, "pagination": {"more": False}}
-
-
 @udp_tipos_condiciones.route("/udp_tipos_condiciones/recuperar/<int:udp_tipo_condicion_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_tipo_condicion_id):
@@ -182,3 +174,11 @@ def recover(udp_tipo_condicion_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
     return redirect(url_for("udp_tipos_condiciones.detail", udp_tipo_condicion_id=udp_tipo_condicion.id))
+
+
+@udp_tipos_condiciones.route("/udp_tipos_condiciones/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpTipoCondicion.query.filter_by(estatus="A").order_by(UdpTipoCondicion.nombre).all()
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

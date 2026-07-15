@@ -7,7 +7,9 @@ import json
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
+from pjecz_delphinus_flask.blueprints.autoridades.models import Autoridad
 from pjecz_delphinus_flask.blueprints.bitacoras.models import Bitacora
+from pjecz_delphinus_flask.blueprints.distritos.models import Distrito
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
 from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
@@ -121,7 +123,13 @@ def new(udp_persona_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
-    return render_template("udp_personas_atenciones/new.jinja2", form=form, udp_persona=udp_persona)
+    return render_template(
+        "udp_personas_atenciones/new.jinja2",
+        form=form,
+        udp_persona=udp_persona,
+        distrito_por_defecto=Distrito.query.filter_by(clave="ND").first(),
+        autoridad_por_defecto=Autoridad.query.filter_by(clave="ND").first(),
+    )
 
 
 @udp_personas_atenciones.route("/udp_personas_atenciones/edicion/<int:udp_persona_atencion_id>", methods=["GET", "POST"])

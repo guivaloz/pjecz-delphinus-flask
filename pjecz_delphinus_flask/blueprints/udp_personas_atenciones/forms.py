@@ -11,6 +11,7 @@ class UdpPersonaAtencionForm(FlaskForm):
     """Formulario UdpPersonaAtencion"""
 
     udp_tipo_tramite = SelectField("Tipo de Trámite", validators=[DataRequired()], choices=None, validate_choice=False)
+    distrito = SelectField("Distrito", validators=[DataRequired()], choices=None, validate_choice=False)
     autoridad = SelectField("Autoridad", validators=[DataRequired()], choices=None, validate_choice=False)
     expediente = StringField("Expediente", validators=[Optional(), Length(max=32)])
     observaciones = TextAreaField("Observaciones", validators=[Optional(), Length(max=1024)])

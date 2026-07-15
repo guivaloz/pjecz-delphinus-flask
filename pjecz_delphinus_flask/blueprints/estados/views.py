@@ -74,3 +74,11 @@ def detail(estado_id):
     """Detalle de un Estado"""
     estado = Estado.query.get_or_404(estado_id)
     return render_template("estados/detail.jinja2", estado=estado)
+
+
+@estados.route("/estados/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = Estado.query.filter_by(estatus="A").order_by(Estado.nombre).all()
+    resultados = [{"id": e.id, "text": e.nombre} for e in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

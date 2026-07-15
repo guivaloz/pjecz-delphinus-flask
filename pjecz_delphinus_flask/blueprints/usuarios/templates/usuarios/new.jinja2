@@ -39,10 +39,10 @@
         fetch("{{ url_for('distritos.select_json') }}")
             .then(response => response.json())
             .then(data => {
-                data.forEach(distrito => {
+                data.results.forEach(item => {
                     const option = document.createElement('option');
-                    option.value = distrito.id;
-                    option.text = distrito.nombre;
+                    option.value = item.id;
+                    option.text = item.text;
                     distritoSelect.appendChild(option);
                 });
                 distritoSelect.value = {{ distrito_por_defecto_id }}; // Seleccionar el distrito por defecto
@@ -54,10 +54,10 @@
                 .then(response => response.json())
                 .then(data => {
                     autoridadSelect.innerHTML = '';
-                    data.forEach(autoridad => {
+                    data.results.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = autoridad.id;
-                        option.text = autoridad.descripcion_corta;
+                        option.value = item.id;
+                        option.text = item.text;
                         autoridadSelect.appendChild(option);
                     });
                 });
