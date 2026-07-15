@@ -1,0 +1,42 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Contraparte {{ udp_persona_contraparte.nombre_completo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Contraparte ' + udp_persona_contraparte.nombre_completo) %}
+        {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_persona_contraparte.udp_persona_id)) }}
+        {% if current_user.can_edit('UDP PERSONAS CONTRAPARTES') %}
+            {{ topbar.button_edit('Editar', url_for('udp_personas_contrapartes.edit', udp_persona_contraparte_id=udp_persona_contraparte.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP PERSONAS CONTRAPARTES') %}
+            {% if udp_persona_contraparte.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_personas_contrapartes.delete', udp_persona_contraparte_id=udp_persona_contraparte.id)) }}{% endif %}
+            {% if udp_persona_contraparte.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_personas_contrapartes.recover', udp_persona_contraparte_id=udp_persona_contraparte.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_persona_contraparte.estatus) %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ detail.label_value_big('Nombre Completo', udp_persona_contraparte.nombre_completo) }}
+                {{ detail.label_value('Persona', udp_persona_contraparte.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_contraparte.udp_persona_id)) }}
+                {{ detail.label_value('CURP', udp_persona_contraparte.curp) }}
+            </div>
+            <div class="col-md-6">
+                {{ detail.label_value('Fecha de Nacimiento', udp_persona_contraparte.nacimiento_fecha | string if udp_persona_contraparte.nacimiento_fecha else '') }}
+                {{ detail.label_value('Observaciones', udp_persona_contraparte.observaciones) }}
+            </div>
+        </div>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP PERSONAS CONTRAPARTES') %}
+        {% if udp_persona_contraparte.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + udp_persona_contraparte.nombre_completo + '?') }}{% endif %}
+        {% if udp_persona_contraparte.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + udp_persona_contraparte.nombre_completo + '?') }}{% endif %}
+    {% endif %}
+{% endblock %}

@@ -158,6 +158,14 @@ def delete(udp_tipo_tramite_id):
     return redirect(url_for("udp_tipos_tramites.detail", udp_tipo_tramite_id=udp_tipo_tramite.id))
 
 
+@udp_tipos_tramites.route("/udp_tipos_tramites/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpTipoTramite.query.filter_by(estatus="A")
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta.order_by(UdpTipoTramite.nombre).all()]
+    return {"results": resultados, "pagination": {"more": False}}
+
+
 @udp_tipos_tramites.route("/udp_tipos_tramites/recuperar/<int:udp_tipo_tramite_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_tipo_tramite_id):

@@ -1,0 +1,216 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}UDP Persona {{ udp_persona.nombre_completo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('UDP Persona ' + udp_persona.nombre_completo) %}
+        {{ topbar.button_previous('UDP Personas', url_for('udp_personas.list_active')) }}
+        {% if current_user.can_edit('UDP PERSONAS') %}
+            {{ topbar.button_edit('Editar', url_for('udp_personas.edit', udp_persona_id=udp_persona.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP PERSONAS') %}
+            {% if udp_persona.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_personas.delete', udp_persona_id=udp_persona.id)) }}{% endif %}
+            {% if udp_persona.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_personas.recover', udp_persona_id=udp_persona.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_persona.estatus) %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ detail.label_value_big('Nombre Completo', udp_persona.nombre_completo) }}
+                {{ detail.label_value('Sexo', udp_persona.udp_sexo.nombre) }}
+                {{ detail.label_value('Tipo de Condición', udp_persona.udp_tipo_condicion.nombre) }}
+                {{ detail.label_value('CURP', udp_persona.curp) }}
+            </div>
+            <div class="col-md-6">
+                {{ detail.label_value('Fecha de Nacimiento', udp_persona.nacimiento_fecha | string if udp_persona.nacimiento_fecha else '') }}
+                {{ detail.label_value('Observaciones', udp_persona.observaciones) }}
+            </div>
+        </div>
+    {% endcall %}
+    {% if udp_persona.estatus == 'A' %}
+        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
+            {% call detail.card('Domicilios') %}
+                <table id="domicilios_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Calle</th>
+                            <th>Num Ext</th>
+                            <th>Colonia</th>
+                            <th>Municipio</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP PERSONAS DOMICILIOS') %}
+                    <a href="{{ url_for('udp_personas_domicilios.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Domicilio</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
+            {% call detail.card('Ingresos') %}
+                <table id="ingresos_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ocupación</th>
+                            <th>Ingresos</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP PERSONAS INGRESOS') %}
+                    <a href="{{ url_for('udp_personas_ingresos.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Ingreso</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
+            {% call detail.card('Contrapartes') %}
+                <table id="contrapartes_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>CURP</th>
+                            <th>Nacimiento</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP PERSONAS CONTRAPARTES') %}
+                    <a href="{{ url_for('udp_personas_contrapartes.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Contraparte</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+            {% call detail.card('Atenciones') %}
+                <table id="atenciones_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo Trámite</th>
+                            <th>Usuario</th>
+                            <th>Autoridad</th>
+                            <th>Expediente</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
+                    <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP PERSONAS') %}
+        {% if udp_persona.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + udp_persona.nombre_completo + '?') }}{% endif %}
+        {% if udp_persona.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + udp_persona.nombre_completo + '?') }}{% endif %}
+    {% endif %}
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    <script>
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+    </script>
+    {% if udp_persona.estatus == 'A' %}
+        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
+            <script>
+                let configDTDomicilios = constructorDataTable.config();
+                configDTDomicilios['ajax']['url'] = "{{ url_for('udp_personas_domicilios.datatable_json') }}";
+                configDTDomicilios['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+                configDTDomicilios['columns'] = [
+                    { data: 'detalle' },
+                    { data: 'calle' },
+                    { data: 'num_exterior' },
+                    { data: 'colonia' },
+                    { data: 'municipio_nombre' }
+                ];
+                configDTDomicilios['columnDefs'] = [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
+                        }
+                    }
+                ];
+                const filtrosDTDomicilios = new FiltrosDataTable('#domicilios_datatable', configDTDomicilios);
+                filtrosDTDomicilios.precargar();
+            </script>
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
+            <script>
+                let configDTIngresos = constructorDataTable.config();
+                configDTIngresos['ajax']['url'] = "{{ url_for('udp_personas_ingresos.datatable_json') }}";
+                configDTIngresos['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+                configDTIngresos['columns'] = [
+                    { data: 'detalle' },
+                    { data: 'ocupacion' },
+                    { data: 'ingresos' }
+                ];
+                configDTIngresos['columnDefs'] = [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
+                        }
+                    }
+                ];
+                const filtrosDTIngresos = new FiltrosDataTable('#ingresos_datatable', configDTIngresos);
+                filtrosDTIngresos.precargar();
+            </script>
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
+            <script>
+                let configDTContrapartes = constructorDataTable.config();
+                configDTContrapartes['ajax']['url'] = "{{ url_for('udp_personas_contrapartes.datatable_json') }}";
+                configDTContrapartes['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+                configDTContrapartes['columns'] = [
+                    { data: 'detalle' },
+                    { data: 'curp' },
+                    { data: 'nacimiento_fecha' }
+                ];
+                configDTContrapartes['columnDefs'] = [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                        }
+                    }
+                ];
+                const filtrosDTContrapartes = new FiltrosDataTable('#contrapartes_datatable', configDTContrapartes);
+                filtrosDTContrapartes.precargar();
+            </script>
+        {% endif %}
+        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+            <script>
+                let configDTAtenciones = constructorDataTable.config();
+                configDTAtenciones['ajax']['url'] = "{{ url_for('udp_personas_atenciones.datatable_json') }}";
+                configDTAtenciones['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+                configDTAtenciones['columns'] = [
+                    { data: 'detalle' },
+                    { data: 'udp_tipo_tramite_nombre' },
+                    { data: 'usuario_email' },
+                    { data: 'autoridad_clave' },
+                    { data: 'expediente' }
+                ];
+                configDTAtenciones['columnDefs'] = [
+                    {
+                        targets: 0,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
+                        }
+                    }
+                ];
+                const filtrosDTAtenciones = new FiltrosDataTable('#atenciones_datatable', configDTAtenciones);
+                filtrosDTAtenciones.precargar();
+            </script>
+        {% endif %}
+    {% endif %}
+{% endblock %}

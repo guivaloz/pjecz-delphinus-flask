@@ -1,0 +1,47 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Nuevo Domicilio para {{ udp_persona.nombre_completo }}{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Nuevo Domicilio para ' + udp_persona.nombre_completo) }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% set form_kwargs = {'udp_persona_id': udp_persona.id} %}
+        {% call f.form_tag('udp_personas_domicilios.new', fid='domicilio_form', **form_kwargs) %}
+            <div class="row">
+                <div class="col-md-6">
+                    {% call f.form_group(form.calle) %}{% endcall %}
+                    {% call f.form_group(form.num_exterior) %}{% endcall %}
+                    {% call f.form_group(form.num_interior) %}{% endcall %}
+                    {% call f.form_group(form.colonia) %}{% endcall %}
+                </div>
+                <div class="col-md-6">
+                    {% call f.form_group(form.codigo_postal) %}{% endcall %}
+                    {% call f.form_group(form.municipio) %}{% endcall %}
+                    {% call f.form_group(form.referencias) %}{% endcall %}
+                </div>
+            </div>
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script>
+        const municipioSelect = document.getElementById('municipio');
+        fetch("{{ url_for('municipios.select_json') }}")
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.text;
+                    municipioSelect.appendChild(option);
+                });
+            });
+    </script>
+{% endblock %}

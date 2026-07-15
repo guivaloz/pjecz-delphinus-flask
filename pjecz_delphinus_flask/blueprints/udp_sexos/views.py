@@ -158,6 +158,14 @@ def delete(udp_sexo_id):
     return redirect(url_for("udp_sexos.detail", udp_sexo_id=udp_sexo.id))
 
 
+@udp_sexos.route("/udp_sexos/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpSexo.query.filter_by(estatus="A")
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta.order_by(UdpSexo.nombre).all()]
+    return {"results": resultados, "pagination": {"more": False}}
+
+
 @udp_sexos.route("/udp_sexos/recuperar/<int:udp_sexo_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_sexo_id):

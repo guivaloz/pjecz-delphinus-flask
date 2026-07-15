@@ -1,0 +1,95 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/list.jinja2' as list %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons(titulo) %}
+        {% if current_user.can_admin('UDP PERSONAS') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_personas.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_personas.list_active')) }}{% endif %}
+        {% endif %}
+        {% if current_user.can_insert('UDP PERSONAS') %}
+            {{ topbar.button_new('Nuevo', url_for('udp_personas.new')) }}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call list.card() %}
+        <!-- Filtros udp_personas -->
+        <div class="row">
+            <div class="col">
+                <form class="row g-1 mb-3" id="filtradorForm" onsubmit="filtrosUdpPersonas.buscar(); return false;">
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <input id="filtroUdpPersonaNombres" type="text" class="form-control" aria-label="Nombres" style="text-transform: uppercase;">
+                            <label for="filtroUdpPersonaNombres">Nombres</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <input id="filtroUdpPersonaApellidoPrimero" type="text" class="form-control" aria-label="Apellido Primero" style="text-transform: uppercase;">
+                            <label for="filtroUdpPersonaApellidoPrimero">Apellido Primero</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-floating">
+                            <input id="filtroUdpPersonaApellidoSegundo" type="text" class="form-control" aria-label="Apellido Segundo" style="text-transform: uppercase;">
+                            <label for="filtroUdpPersonaApellidoSegundo">Apellido Segundo</label>
+                        </div>
+                    </div>
+                    <div class="col-3 text-end">
+                        <button title="Buscar" class="btn btn-primary btn-lg" onclick="filtrosUdpPersonas.buscar(); return false;" id="button-buscar"><span class="mdi mdi-magnify"></span></button>
+                        <button title="Limpiar" class="btn btn-warning btn-lg" type="reset" onclick="filtrosUdpPersonas.limpiar();" id="button-limpiar"><span class="mdi mdi-broom"></span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- Datatable udp_personas -->
+        <table id="udp_personas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>CURP</th>
+                    <th>Nacimiento</th>
+                    <th>Sexo</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    <script>
+        // DataTable udp_personas
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDTUdpPersonas = constructorDataTable.config();
+        configDTUdpPersonas['ajax']['url'] = "{{ url_for('udp_personas.datatable_json') }}";
+        configDTUdpPersonas['ajax']['data'] = {{ filtros }};
+        configDTUdpPersonas['columns'] = [
+            { data: 'detalle' },
+            { data: 'curp' },
+            { data: 'nacimiento_fecha' },
+            { data: 'udp_sexo_nombre' }
+        ];
+        configDTUdpPersonas['columnDefs'] = [
+            {
+                targets: 0,
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                }
+            }
+        ];
+        // Filtros udp_personas
+        const filtrosUdpPersonas = new FiltrosDataTable('#udp_personas_datatable', configDTUdpPersonas);
+        filtrosUdpPersonas.agregarInput('filtroUdpPersonaNombres', 'nombres');
+        filtrosUdpPersonas.agregarInput('filtroUdpPersonaApellidoPrimero', 'apellido_primero');
+        filtrosUdpPersonas.agregarInput('filtroUdpPersonaApellidoSegundo', 'apellido_segundo');
+        filtrosUdpPersonas.precargar();
+    </script>
+{% endblock %}

@@ -28,7 +28,160 @@
             {% endcall %}
         </div>
     </div>
+    {% if current_user.can_view('UDP PERSONAS') %}
+    <div class="row">
+        <div class="col-md-6">
+            {% call card.card(title='Buscar Personas') %}
+                <form id="buscarPersonaForm" onsubmit="buscarPersona(); return false;">
+                    <div class="input-group mb-3">
+                        <input type="text" id="buscarPersonaInput" class="form-control" placeholder="Nombre o apellido..." style="text-transform: uppercase;">
+                        <button class="btn btn-primary" type="submit"><span class="mdi mdi-magnify"></span></button>
+                    </div>
+                </form>
+                <div id="resultadosPersonas"></div>
+                <a href="{{ url_for('udp_personas.list_active') }}" class="btn btn-outline-primary btn-sm">Ver todas las personas</a>
+                {% if current_user.can_insert('UDP PERSONAS') %}
+                    <a href="{{ url_for('udp_personas.new') }}" class="btn btn-outline-success btn-sm">Nueva persona</a>
+                {% endif %}
+            {% endcall %}
+        </div>
+        <div class="col-md-6">
+            {% call card.card(title='Buscar Contrapartes') %}
+                <form id="buscarContraparteForm" onsubmit="buscarContraparte(); return false;">
+                    <div class="input-group mb-3">
+                        <input type="text" id="buscarContraparteInput" class="form-control" placeholder="Nombre o apellido..." style="text-transform: uppercase;">
+                        <button class="btn btn-primary" type="submit"><span class="mdi mdi-magnify"></span></button>
+                    </div>
+                </form>
+                <div id="resultadosContrapartes"></div>
+                <a href="{{ url_for('udp_personas_contrapartes.list_active') }}" class="btn btn-outline-primary btn-sm">Ver todas las contrapartes</a>
+            {% endcall %}
+        </div>
+    </div>
+    {% endif %}
+    {% if current_user.can_view('UDP PERSONAS') %}
+    <div class="row">
+        <div class="col-md-12">
+            {% call card.card(title='Últimas Personas Agregadas') %}
+                <table id="ultimas_personas_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>CURP</th>
+                            <th>Nacimiento</th>
+                            <th>Sexo</th>
+                        </tr>
+                    </thead>
+                </table>
+            {% endcall %}
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block custom_javascript %}
+    {% if current_user.can_view('UDP PERSONAS') %}
+    <script>
+        // Búsqueda de personas
+        function buscarPersona() {
+            const input = document.getElementById('buscarPersonaInput');
+            const resultados = document.getElementById('resultadosPersonas');
+            const texto = input.value.trim().toUpperCase();
+            if (texto === '') {
+                resultados.innerHTML = '<p class="text-muted">Escriba un nombre o apellido para buscar.</p>';
+                return;
+            }
+            fetch("{{ url_for('udp_personas.datatable_json') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: 'draw=1&start=0&length=10&nombres=' + encodeURIComponent(texto)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.aaData.length === 0) {
+                    resultados.innerHTML = '<p class="text-muted">No se encontraron personas.</p>';
+                    return;
+                }
+                let html = '<ul class="list-group">';
+                data.aaData.forEach(item => {
+                    html += '<li class="list-group-item"><a href="' + item.detalle.url + '">' + item.detalle.nombre_completo + '</a>';
+                    if (item.curp) html += ' <small class="text-muted">' + item.curp + '</small>';
+                    html += '</li>';
+                });
+                html += '</ul>';
+                resultados.innerHTML = html;
+            })
+            .catch(error => {
+                resultados.innerHTML = '<p class="text-danger">Error en la búsqueda.</p>';
+            });
+        }
+
+        // Búsqueda de contrapartes
+        function buscarContraparte() {
+            const input = document.getElementById('buscarContraparteInput');
+            const resultados = document.getElementById('resultadosContrapartes');
+            const texto = input.value.trim().toUpperCase();
+            if (texto === '') {
+                resultados.innerHTML = '<p class="text-muted">Escriba un nombre o apellido para buscar.</p>';
+                return;
+            }
+            fetch("{{ url_for('udp_personas_contrapartes.datatable_json') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: 'draw=1&start=0&length=10&nombres=' + encodeURIComponent(texto)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.aaData.length === 0) {
+                    resultados.innerHTML = '<p class="text-muted">No se encontraron contrapartes.</p>';
+                    return;
+                }
+                let html = '<ul class="list-group">';
+                data.aaData.forEach(item => {
+                    html += '<li class="list-group-item"><a href="' + item.detalle.url + '">' + item.detalle.nombre_completo + '</a>';
+                    if (item.curp) html += ' <small class="text-muted">' + item.curp + '</small>';
+                    html += '</li>';
+                });
+                html += '</ul>';
+                resultados.innerHTML = html;
+            })
+            .catch(error => {
+                resultados.innerHTML = '<p class="text-danger">Error en la búsqueda.</p>';
+            });
+        }
+    </script>
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    <script>
+        // DataTable últimas personas
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDTUltimasPersonas = constructorDataTable.config();
+        configDTUltimasPersonas['ajax']['url'] = "{{ url_for('sistemas.ultimas_personas_json') }}";
+        configDTUltimasPersonas['ajax']['data'] = { 'estatus': 'A' };
+        configDTUltimasPersonas['columns'] = [
+            { data: 'nombre_completo' },
+            { data: 'curp' },
+            { data: 'nacimiento_fecha' },
+            { data: 'udp_sexo_nombre' }
+        ];
+        configDTUltimasPersonas['columnDefs'] = [
+            {
+                targets: 0,
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                }
+            }
+        ];
+        configDTUltimasPersonas['order'] = [];
+        const filtrosDTUltimasPersonas = new FiltrosDataTable('#ultimas_personas_datatable', configDTUltimasPersonas);
+        filtrosDTUltimasPersonas.precargar();
+    </script>
+    {% endif %}
 {% endblock %}

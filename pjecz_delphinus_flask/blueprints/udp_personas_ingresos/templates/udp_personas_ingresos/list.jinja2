@@ -1,0 +1,55 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/list.jinja2' as list %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons(titulo) %}
+        {% if current_user.can_admin('UDP PERSONAS INGRESOS') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_personas_ingresos.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_personas_ingresos.list_active')) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call list.card() %}
+        <table id="udp_personas_ingresos_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ocupación</th>
+                    <th>Ingresos</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    <script>
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDT = constructorDataTable.config();
+        configDT['ajax']['url'] = "{{ url_for('udp_personas_ingresos.datatable_json') }}";
+        configDT['ajax']['data'] = {{ filtros }};
+        configDT['columns'] = [
+            { data: 'detalle' },
+            { data: 'ocupacion' },
+            { data: 'ingresos' }
+        ];
+        configDT['columnDefs'] = [
+            {
+                targets: 0,
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.id + '</a>';
+                }
+            }
+        ];
+        const filtrosDT = new FiltrosDataTable('#udp_personas_ingresos_datatable', configDT);
+        filtrosDT.precargar();
+    </script>
+{% endblock %}

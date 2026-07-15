@@ -2,8 +2,10 @@
 Sistemas
 """
 
-from flask import Blueprint, redirect, render_template, send_from_directory
-from flask_login import current_user
+from flask import Blueprint, redirect, render_template, send_from_directory, url_for
+from flask_login import current_user, login_required
+
+from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
 
 sistemas = Blueprint("sistemas", __name__, template_folder="templates")
 
@@ -19,6 +21,30 @@ def start():
 
     # No está autenticado, debe de iniciar sesión
     return redirect("/login")
+
+
+@sistemas.route("/sistemas/ultimas_personas_json", methods=["GET", "POST"])
+@login_required
+def ultimas_personas_json():
+    """DataTable JSON para las últimas 10 personas agregadas"""
+    from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
+
+    draw, start, rows_per_page = get_datatable_parameters()
+    consulta = UdpPersona.query.filter_by(estatus="A")
+    registros = consulta.order_by(UdpPersona.id.desc()).offset(start).limit(rows_per_page).all()
+    total = consulta.count()
+    data = []
+    for resultado in registros:
+        data.append(
+            {
+                "nombre_completo": resultado.nombre_completo,
+                "url": url_for("udp_personas.detail", udp_persona_id=resultado.id),
+                "curp": resultado.curp or "",
+                "nacimiento_fecha": resultado.nacimiento_fecha.strftime("%Y-%m-%d") if resultado.nacimiento_fecha else "",
+                "udp_sexo_nombre": resultado.udp_sexo.nombre,
+            }
+        )
+    return output_datatable_json(draw, total, data)
 
 
 @sistemas.route("/favicon.ico")

@@ -1,0 +1,41 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Ingreso {{ udp_persona_ingreso.id }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Ingreso ' + udp_persona_ingreso.id | string) %}
+        {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_persona_ingreso.udp_persona_id)) }}
+        {% if current_user.can_edit('UDP PERSONAS INGRESOS') %}
+            {{ topbar.button_edit('Editar', url_for('udp_personas_ingresos.edit', udp_persona_ingreso_id=udp_persona_ingreso.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP PERSONAS INGRESOS') %}
+            {% if udp_persona_ingreso.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_personas_ingresos.delete', udp_persona_ingreso_id=udp_persona_ingreso.id)) }}{% endif %}
+            {% if udp_persona_ingreso.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_personas_ingresos.recover', udp_persona_ingreso_id=udp_persona_ingreso.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_persona_ingreso.estatus) %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ detail.label_value('Persona', udp_persona_ingreso.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_ingreso.udp_persona_id)) }}
+                {{ detail.label_value('Ocupación', udp_persona_ingreso.ocupacion) }}
+            </div>
+            <div class="col-md-6">
+                {{ detail.label_value('Ingresos', udp_persona_ingreso.ingresos | string if udp_persona_ingreso.ingresos else '') }}
+                {{ detail.label_value('Observaciones', udp_persona_ingreso.observaciones) }}
+            </div>
+        </div>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP PERSONAS INGRESOS') %}
+        {% if udp_persona_ingreso.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar este ingreso?') }}{% endif %}
+        {% if udp_persona_ingreso.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar este ingreso?') }}{% endif %}
+    {% endif %}
+{% endblock %}

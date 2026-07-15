@@ -1,0 +1,43 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Atención {{ udp_persona_atencion.id }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Atención ' + udp_persona_atencion.id | string) %}
+        {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_persona_atencion.udp_persona_id)) }}
+        {% if current_user.can_edit('UDP PERSONAS ATENCIONES') %}
+            {{ topbar.button_edit('Editar', url_for('udp_personas_atenciones.edit', udp_persona_atencion_id=udp_persona_atencion.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP PERSONAS ATENCIONES') %}
+            {% if udp_persona_atencion.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_personas_atenciones.delete', udp_persona_atencion_id=udp_persona_atencion.id)) }}{% endif %}
+            {% if udp_persona_atencion.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_personas_atenciones.recover', udp_persona_atencion_id=udp_persona_atencion.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_persona_atencion.estatus) %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ detail.label_value('Persona', udp_persona_atencion.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_atencion.udp_persona_id)) }}
+                {{ detail.label_value('Tipo de Trámite', udp_persona_atencion.udp_tipo_tramite.nombre) }}
+                {{ detail.label_value('Expediente', udp_persona_atencion.expediente) }}
+            </div>
+            <div class="col-md-6">
+                {{ detail.label_value('Usuario', udp_persona_atencion.usuario.email) }}
+                {{ detail.label_value('Autoridad', udp_persona_atencion.autoridad.clave + ' : ' + udp_persona_atencion.autoridad.descripcion_corta) }}
+                {{ detail.label_value('Observaciones', udp_persona_atencion.observaciones) }}
+            </div>
+        </div>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP PERSONAS ATENCIONES') %}
+        {% if udp_persona_atencion.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar esta atención?') }}{% endif %}
+        {% if udp_persona_atencion.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar esta atención?') }}{% endif %}
+    {% endif %}
+{% endblock %}
