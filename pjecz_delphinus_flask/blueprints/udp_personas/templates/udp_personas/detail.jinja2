@@ -73,6 +73,7 @@
                 <table id="contrapartes_datatable" class="table display nowrap" style="width:100%">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Nombre</th>
                             <th>CURP</th>
                             <th>Nacimiento</th>
@@ -187,6 +188,7 @@
                 configDTContrapartes['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
                 configDTContrapartes['columns'] = [
                     { data: 'detalle' },
+                    { data: 'nombre_completo' },
                     { data: 'curp' },
                     { data: 'nacimiento_fecha' }
                 ];
@@ -195,7 +197,7 @@
                         targets: 0,
                         data: null,
                         render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                            return '<a href="' + data.url + '">' + data.id + '</a>';
                         }
                     }
                 ];

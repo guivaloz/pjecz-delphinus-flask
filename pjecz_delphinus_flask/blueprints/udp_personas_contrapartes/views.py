@@ -62,9 +62,10 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
-                    "nombre_completo": resultado.nombre_completo,
+                    "id": resultado.id,
                     "url": url_for("udp_personas_contrapartes.detail", udp_persona_contraparte_id=resultado.id),
                 },
+                "nombre_completo": resultado.nombre_completo,
                 "curp": resultado.curp or "",
                 "nacimiento_fecha": resultado.nacimiento_fecha.strftime("%Y-%m-%d") if resultado.nacimiento_fecha else "",
             }

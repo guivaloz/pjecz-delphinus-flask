@@ -57,6 +57,7 @@
         <table id="udp_personas_contrapartes_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Nombre</th>
                     <th>CURP</th>
                     <th>Nacimiento</th>
@@ -76,6 +77,7 @@
         configDT['ajax']['data'] = {{ filtros }};
         configDT['columns'] = [
             { data: 'detalle' },
+            { data: 'nombre' },
             { data: 'curp' },
             { data: 'nacimiento_fecha' }
         ];
@@ -84,7 +86,7 @@
                 targets: 0,
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                    return '<a href="' + data.url + '">' + data.id + '</a>';
                 }
             }
         ];
