@@ -48,6 +48,8 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     bitacoras: Mapped[List["Bitacora"]] = relationship(back_populates="usuario")
     entradas_salidas: Mapped[List["EntradaSalida"]] = relationship(back_populates="usuario")
     tareas: Mapped[List["Tarea"]] = relationship(back_populates="usuario")
+    udp_personas_atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="usuario")
+    udp_personas_visitas: Mapped[List["UdpPersonaVisita"]] = relationship(back_populates="usuario")
     usuarios_roles: Mapped[List["UsuarioRol"]] = relationship(back_populates="usuario")
 
     # Propiedades

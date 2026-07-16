@@ -62,7 +62,7 @@ def list_active():
     return render_template(
         "udp_sexos/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
-        titulo="UDP Sexos",
+        titulo="Sexos",
         estatus="A",
     )
 
@@ -74,7 +74,7 @@ def list_inactive():
     return render_template(
         "udp_sexos/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
-        titulo="UDP Sexos inactivos",
+        titulo="Sexos inactivos",
         estatus="B",
     )
 
@@ -174,3 +174,11 @@ def recover(udp_sexo_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
     return redirect(url_for("udp_sexos.detail", udp_sexo_id=udp_sexo.id))
+
+
+@udp_sexos.route("/udp_sexos/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpSexo.query.filter_by(estatus="A").order_by(UdpSexo.nombre).all()
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

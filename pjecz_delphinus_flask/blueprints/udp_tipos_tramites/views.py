@@ -62,7 +62,7 @@ def list_active():
     return render_template(
         "udp_tipos_tramites/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
-        titulo="UDP Tipos Tramites",
+        titulo="Tipos Trámites",
         estatus="A",
     )
 
@@ -74,7 +74,7 @@ def list_inactive():
     return render_template(
         "udp_tipos_tramites/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
-        titulo="UDP Tipos Tramites inactivos",
+        titulo="Tipos Trámites inactivos",
         estatus="B",
     )
 
@@ -174,3 +174,11 @@ def recover(udp_tipo_tramite_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
     return redirect(url_for("udp_tipos_tramites.detail", udp_tipo_tramite_id=udp_tipo_tramite.id))
+
+
+@udp_tipos_tramites.route("/udp_tipos_tramites/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpTipoTramite.query.filter_by(estatus="A").order_by(UdpTipoTramite.nombre).all()
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

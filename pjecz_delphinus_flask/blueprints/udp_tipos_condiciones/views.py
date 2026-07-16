@@ -62,7 +62,7 @@ def list_active():
     return render_template(
         "udp_tipos_condiciones/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
-        titulo="UDP Tipos Condiciones",
+        titulo="Tipos Condiciones",
         estatus="A",
     )
 
@@ -74,7 +74,7 @@ def list_inactive():
     return render_template(
         "udp_tipos_condiciones/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
-        titulo="UDP Tipos Condiciones inactivos",
+        titulo="Tipos Condiciones inactivos",
         estatus="B",
     )
 
@@ -174,3 +174,11 @@ def recover(udp_tipo_condicion_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
     return redirect(url_for("udp_tipos_condiciones.detail", udp_tipo_condicion_id=udp_tipo_condicion.id))
+
+
+@udp_tipos_condiciones.route("/udp_tipos_condiciones/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpTipoCondicion.query.filter_by(estatus="A").order_by(UdpTipoCondicion.nombre).all()
+    resultados = [{"id": s.id, "text": s.nombre} for s in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

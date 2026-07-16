@@ -1,0 +1,45 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Domicilio {{ udp_persona_domicilio.id }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Domicilio ' + udp_persona_domicilio.id | string) %}
+        {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_persona_domicilio.udp_persona_id)) }}
+        {% if current_user.can_edit('UDP PERSONAS DOMICILIOS') %}
+            {{ topbar.button_edit('Editar', url_for('udp_personas_domicilios.edit', udp_persona_domicilio_id=udp_persona_domicilio.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP PERSONAS DOMICILIOS') %}
+            {% if udp_persona_domicilio.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_personas_domicilios.delete', udp_persona_domicilio_id=udp_persona_domicilio.id)) }}{% endif %}
+            {% if udp_persona_domicilio.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_personas_domicilios.recover', udp_persona_domicilio_id=udp_persona_domicilio.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_persona_domicilio.estatus) %}
+        <div class="row">
+            <div class="col-md-6">
+                {{ detail.label_value('Persona', udp_persona_domicilio.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_persona_domicilio.udp_persona_id)) }}
+                {{ detail.label_value('Calle', udp_persona_domicilio.calle) }}
+                {{ detail.label_value('Número Exterior', udp_persona_domicilio.num_exterior) }}
+                {{ detail.label_value('Número Interior', udp_persona_domicilio.num_interior) }}
+            </div>
+            <div class="col-md-6">
+                {{ detail.label_value('Colonia', udp_persona_domicilio.colonia) }}
+                {{ detail.label_value('Código Postal', udp_persona_domicilio.codigo_postal | string if udp_persona_domicilio.codigo_postal else '') }}
+                {{ detail.label_value('Municipio', udp_persona_domicilio.municipio.nombre) }}
+                {{ detail.label_value('Referencias', udp_persona_domicilio.referencias) }}
+            </div>
+        </div>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP PERSONAS DOMICILIOS') %}
+        {% if udp_persona_domicilio.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar este domicilio?') }}{% endif %}
+        {% if udp_persona_domicilio.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar este domicilio?') }}{% endif %}
+    {% endif %}
+{% endblock %}

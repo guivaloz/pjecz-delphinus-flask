@@ -1,0 +1,75 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Editar Atención {{ udp_persona_atencion.id }}{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Editar Atención ' + udp_persona_atencion.id | string) }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% set form_kwargs = {'udp_persona_atencion_id': udp_persona_atencion.id} %}
+        {% call f.form_tag('udp_personas_atenciones.edit', fid='atencion_form', **form_kwargs) %}
+            {% call f.form_group(form.udp_tipo_tramite) %}{% endcall %}
+            {% call f.form_group(form.distrito) %}{% endcall %}
+            {% call f.form_group(form.autoridad) %}{% endcall %}
+            {% call f.form_group(form.expediente) %}{% endcall %}
+            {% call f.form_group(form.observaciones) %}{% endcall %}
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <!-- Select udp_tipo_tramite -->
+    <script>
+        const udpTipoTramiteSelect = document.getElementById('udp_tipo_tramite');
+        // Cargar las opciones del select udp_tipo_tramite
+        fetch("{{ url_for('udp_tipos_tramites.select_json') }}")
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.text;
+                    udpTipoTramiteSelect.appendChild(option);
+                });
+                udpTipoTramiteSelect.value = {{ udp_persona_atencion.udp_tipo_tramite_id }};
+            });
+    </script>
+    <!-- Select distrito-autoridad -->
+    <script>
+        const distritoSelect = document.getElementById('distrito');
+        const autoridadSelect = document.getElementById('autoridad');
+        // Cargar las opciones del select distrito
+        fetch("{{ url_for('distritos.select_json') }}")
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.text;
+                    distritoSelect.appendChild(option);
+                });
+                distritoSelect.value = {{ udp_persona_atencion.autoridad.distrito_id }}; // Seleccionar el distrito
+                distritoSelect.dispatchEvent(new Event('change'));
+            });
+        // Cargar las opciones del select autoridad, si el distrito cambia
+        distritoSelect.addEventListener('change', () => {
+            fetch(`{{ url_for('autoridades.select_json') }}?distrito_id=${distritoSelect.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    autoridadSelect.innerHTML = '';
+                    data.results.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = item.id;
+                        option.text = item.text;
+                        autoridadSelect.appendChild(option);
+                    });
+                    autoridadSelect.value = {{ udp_persona_atencion.autoridad_id }}; // Seleccionar la autoridad
+                });
+        });
+    </script>
+{% endblock %}

@@ -3,11 +3,11 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}UDP Sexo {{ udp_sexo.nombre }}{% endblock %}
+{% block title %}Sexo {{ udp_sexo.nombre }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('UDP Sexo ' + udp_sexo.nombre) %}
-        {{ topbar.button_previous('UDP Sexos', url_for('udp_sexos.list_active')) }}
+    {% call topbar.page_buttons('Sexo ' + udp_sexo.nombre) %}
+        {{ topbar.button_previous('Sexos', url_for('udp_sexos.list_active')) }}
         {% if current_user.can_edit('UDP SEXOS') %}
             {{ topbar.button_edit('Editar', url_for('udp_sexos.edit', udp_sexo_id=udp_sexo.id)) }}
         {% endif %}
@@ -20,7 +20,7 @@
 
 {% block content %}
     {% call detail.card(estatus=udp_sexo.estatus) %}
-        {{ detail.label_value_big('Nombre', udp_sexo.nombre) }}
+        {{ detail.label_value('Nombre', udp_sexo.nombre) }}
     {% endcall %}
 {% endblock %}
 

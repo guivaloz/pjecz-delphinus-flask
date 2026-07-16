@@ -1,0 +1,38 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/form.jinja2' as f with context %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Editar Visita {{ udp_persona_visita.id }}{% endblock %}
+
+{% block topbar_actions %}
+    {{ topbar.page('Editar Visita ' + udp_persona_visita.id | string) }}
+{% endblock %}
+
+{% block content %}
+    {% call f.card() %}
+        {% set form_kwargs = {'udp_persona_visita_id': udp_persona_visita.id} %}
+        {% call f.form_tag('udp_personas_atenciones.edit', fid='atencion_form', **form_kwargs) %}
+            {% call f.form_group(form.udp_tipo_visita) %}{% endcall %}
+            {% call f.form_group(form.observaciones) %}{% endcall %}
+            {% call f.form_group(form.guardar) %}{% endcall %}
+        {% endcall %}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script>
+        const udpTipoVisitaSelect = document.getElementById('udp_tipo_visita');
+        // Cargar las opciones del select udp_tipo_visita
+        fetch("{{ url_for('udp_tipos_tramites.select_json') }}")
+            .then(response => response.json())
+            .then(data => {
+                data.results.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.text = item.text;
+                    udpTipoVisitaSelect.appendChild(option);
+                });
+                udpTipoVisitaSelect.value = {{ udp_persona_atencion.udp_tipo_visita_id }};
+            });
+    </script>
+{% endblock %}

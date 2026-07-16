@@ -450,9 +450,8 @@ def select_json():
         usuarios_email = safe_email(request.form["searchString"], search_fragment=True)
         if usuarios_email != "":
             consulta = consulta.filter(Usuario.email.contains(usuarios_email))
-    resultados = []
-    for usuario in consulta.order_by(Usuario.email).limit(20).all():
-        resultados.append({"id": usuario.email, "text": usuario.email, "nombre": usuario.nombre})
+    consulta = consulta.order_by(Usuario.email).limit(20).all()
+    resultados = [{"id": u.id, "text": u.email} for u in consulta]
     return {"results": resultados, "pagination": {"more": False}}
 
 

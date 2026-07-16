@@ -78,3 +78,15 @@ def detail(municipio_id):
     """Detalle de un Municipio"""
     municipio = Municipio.query.get_or_404(municipio_id)
     return render_template("municipios/detail.jinja2", municipio=municipio)
+
+
+@municipios.route("/municipios/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = Municipio.query.filter(Municipio.estatus == "A")
+    if "estado_id" in request.args:
+        estado_id = request.args["estado_id"]
+        consulta = consulta.filter(Municipio.estado_id == estado_id)
+    consulta = consulta.order_by(Municipio.nombre).all()
+    resultados = [{"id": m.id, "text": m.nombre} for m in consulta]
+    return {"results": resultados, "pagination": {"more": False}}
