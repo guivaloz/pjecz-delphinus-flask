@@ -7,9 +7,9 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - pjecz_dephinus_postgres_data:/var/lib/postgresql/data
+      - pjecz_delphinus_postgres_data:/var/lib/postgresql/docker
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${POSTGRESQL_PORT:-5432}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -31,4 +31,4 @@ services:
         condition: service_healthy
 
 volumes:
-  pjecz_dephinus_postgres_data:
+  pjecz_delphinus_postgres_data:
