@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Traer el binario oficial de uv directamente desde su imagen distroless
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
+# Crear un directorio de trabajo para la aplicación
 WORKDIR /app
 
 # Optimizar el comportamiento de uv y python en Docker
@@ -32,4 +33,10 @@ ENV PATH="/app/.venv/bin:$PATH" \
 # Exponer el puerto de producción
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "pjecz_delphinus_flask.app:app"]
+# Lanzar la aplicación Flask usando Gunicorn
+# - workers: número de procesos de trabajo en paralelo (núcleos de CPU * 2 + 1)
+# - threads: número de hilos por proceso de trabajo en 2
+# - worker-class gthread: usar hilos en lugar de procesos para manejar múltiples solicitudes
+# - bind: dirección y puerto donde escuchar
+# - keep-alive: tiempo de espera para mantener las conexiones vivas
+CMD ["gunicorn", "--workers", "4", "--threads", "2", "--worker-class", "gthread", "--bind", "0.0.0.0:5000", "--keep-alive", "5", "pjecz_delphinus_flask.app:app"]
