@@ -1,15 +1,16 @@
 services:
   postgres:
-    image: postgres:18
+    image: postgres:18-alpine
+    container_name: pjecz_delphinus_postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - pjecz_delphinus_postgres_data:/var/lib/postgresql/docker
+      - postgres_data:/var/lib/postgresql
     ports:
-      - "${POSTGRESQL_PORT:-5432}:5432"
+      - "${POSTGRESQL_PORT}:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 10s
@@ -18,17 +19,15 @@ services:
 
   app:
     build: .
+    container_name: pjecz_delphinus_flask
     restart: unless-stopped
     env_file:
       - .env
-    environment:
-      DB_HOST: postgres
-      SQLALCHEMY_DATABASE_URI: "postgresql+psycopg2://${DB_USER}:${DB_PASS}@postgres:5432/${DB_NAME}"
     ports:
-      - "${FRONTEND_PORT:-5001}:5000"
+      - "${FRONTEND_PORT}:5000"
     depends_on:
       postgres:
         condition: service_healthy
 
 volumes:
-  pjecz_delphinus_postgres_data:
+  postgres_data:

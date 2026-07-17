@@ -32,7 +32,7 @@ from pjecz_delphinus_flask.config.extensions import authentication, csrf, databa
 from pjecz_delphinus_flask.config.settings import Settings
 
 # Crear la aplicación
-app = Flask(__name__, instance_relative_config=True)
+app = Flask(__name__)
 app.add_url_rule("/favicon.ico", endpoint="sistemas.favicon")
 app.config.from_object(Settings())
 
