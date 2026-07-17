@@ -31,5 +31,5 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Exponer el puerto de producción
 EXPOSE 5000
 
-# CMD ["uvicorn", "pjecz_delphinus_flask.app:app", "--host", "0.0.0.0", "--port", "5000"]
-CMD ["gunicorn", "pjecz_delphinus_flask.app:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000"]
+CMD ["uvicorn", "pjecz_delphinus_flask.app:app", "--host", "0.0.0.0", "--port", "5000"]
+# CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:5000", "pjecz_delphinus_flask.app:app"]
