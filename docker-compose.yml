@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - pjecz_delphinus_postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     ports:
       - "${POSTGRESQL_PORT}:5432"
     healthcheck:
@@ -30,4 +30,4 @@ services:
         condition: service_healthy
 
 volumes:
-  pjecz_delphinus_postgres_data:
+  postgres_data:
