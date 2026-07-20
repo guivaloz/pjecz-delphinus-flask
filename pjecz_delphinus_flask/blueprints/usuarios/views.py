@@ -444,13 +444,11 @@ def recover(usuario_id):
 @usuarios.route("/usuarios/select_json", methods=["GET", "POST"])
 def select_json():
     """Select JSON para Usuarios"""
-    # Consultar
     consulta = Usuario.query.filter_by(estatus="A")
-    if "searchString" in request.form:
-        usuarios_email = safe_email(request.form["searchString"], search_fragment=True)
-        if usuarios_email != "":
-            consulta = consulta.filter(Usuario.email.contains(usuarios_email))
-    consulta = consulta.order_by(Usuario.email).limit(20).all()
+    if "autoridad_id" in request.args:
+        autoridad_id = request.args["autoridad_id"]
+        consulta = consulta.filter_by(autoridad_id=autoridad_id)
+    consulta = consulta.order_by(Usuario.email).all()
     resultados = [{"id": u.id, "text": u.email} for u in consulta]
     return {"results": resultados, "pagination": {"more": False}}
 
