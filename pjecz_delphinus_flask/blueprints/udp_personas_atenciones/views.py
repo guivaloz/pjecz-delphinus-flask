@@ -127,8 +127,8 @@ def new(udp_persona_id):
         "udp_personas_atenciones/new.jinja2",
         form=form,
         udp_persona=udp_persona,
-        distrito_por_defecto=Distrito.query.filter_by(clave="ND").first(),
-        autoridad_por_defecto=Autoridad.query.filter_by(clave="ND").first(),
+        distrito_por_defecto=current_user.autoridad.distrito,
+        autoridad_por_defecto=current_user.autoridad,
     )
 
 

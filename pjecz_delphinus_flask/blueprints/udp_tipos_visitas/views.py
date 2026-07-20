@@ -174,3 +174,11 @@ def recover(udp_tipo_visita_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
     return redirect(url_for("udp_tipos_visitas.detail", udp_tipo_visita_id=udp_tipo_visita.id))
+
+
+@udp_tipos_visitas.route("/udp_tipos_visitas/select_json", methods=["GET", "POST"])
+def select_json():
+    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    consulta = UdpTipoVisita.query.filter_by(estatus="A").order_by(UdpTipoVisita.nombre).all()
+    resultados = [{"id": t.id, "text": t.nombre} for t in consulta]
+    return {"results": resultados, "pagination": {"more": False}}

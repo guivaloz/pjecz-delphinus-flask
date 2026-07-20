@@ -114,8 +114,8 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
-                    <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
+                {% if current_user.can_insert('UDP PERSONAS VISITAS') %}
+                    <a href="{{ url_for('udp_personas_visitas.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
                 {% endif %}
             {% endcall %}
         {% endif %}

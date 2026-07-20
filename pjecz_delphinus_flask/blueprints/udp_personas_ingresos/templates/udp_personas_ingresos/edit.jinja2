@@ -14,7 +14,7 @@
         {% call f.form_tag('udp_personas_ingresos.edit', fid='ingreso_form', **form_kwargs) %}
             {% call f.form_group(form.ocupacion) %}{% endcall %}
             {% call f.form_group(form.ingresos) %}{% endcall %}
-            {% call f.form_group(form.observaciones) %}{% endcall %}
+            {% call f.form_group(form.observaciones, rows="8") %}{% endcall %}
             {% call f.form_group(form.guardar) %}{% endcall %}
         {% endcall %}
     {% endcall %}

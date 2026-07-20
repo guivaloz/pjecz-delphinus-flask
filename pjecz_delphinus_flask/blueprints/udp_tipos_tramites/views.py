@@ -180,5 +180,5 @@ def recover(udp_tipo_tramite_id):
 def select_json():
     """Proporcionar el JSON con los ids, nombres para elegir con un select"""
     consulta = UdpTipoTramite.query.filter_by(estatus="A").order_by(UdpTipoTramite.nombre).all()
-    resultados = [{"id": s.id, "text": s.nombre} for s in consulta]
+    resultados = [{"id": t.id, "text": t.nombre} for t in consulta]
     return {"results": resultados, "pagination": {"more": False}}
