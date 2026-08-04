@@ -1,6 +1,6 @@
 # SPEC 01 — UDP Contrapartes independientes con vínculo a atenciones
 
-> **Status:** Borrador
+> **Status:** Aprobado
 > **Depends on:** —
 > **Date:** 2026-08-04
 > **Objective:** Crear tabla `udp_contrapartes` independiente, tabla intermedia `udp_atenciones_contrapartes`, y restricción de unicidad CURP que permita valores vacíos.
