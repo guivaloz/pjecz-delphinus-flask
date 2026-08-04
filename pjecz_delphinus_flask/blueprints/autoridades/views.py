@@ -243,7 +243,7 @@ def select_json():
         distrito_id = request.args["distrito_id"]
         consulta = consulta.filter_by(distrito_id=distrito_id)
     consulta = consulta.order_by(Autoridad.descripcion_corta).all()
-    resultados = [{"id": a.id,"text": a.descripcion_corta} for a in consulta]
+    resultados = [{"id": a.id, "text": a.descripcion_corta} for a in consulta]
     return {"results": resultados, "pagination": {"more": False}}
 
 

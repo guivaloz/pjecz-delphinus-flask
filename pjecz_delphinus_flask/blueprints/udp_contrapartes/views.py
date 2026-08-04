@@ -117,9 +117,7 @@ def new():
         curp = safe_string(form.curp.data)
         # Verificar CURP duplicado si tiene valor
         if curp:
-            posible_duplicado = UdpContraparte.query.filter(
-                UdpContraparte.curp == curp, UdpContraparte.estatus == "A"
-            ).first()
+            posible_duplicado = UdpContraparte.query.filter(UdpContraparte.curp == curp, UdpContraparte.estatus == "A").first()
             if posible_duplicado:
                 flash(f"Ya existe una contraparte con CURP {curp}: {posible_duplicado.nombre_completo}. Verifique.", "warning")
         udp_contraparte = UdpContraparte(

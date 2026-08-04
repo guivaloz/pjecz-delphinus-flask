@@ -9,8 +9,8 @@ from flask_login import current_user, login_required
 
 from pjecz_delphinus_flask.blueprints.bitacoras.models import Bitacora
 from pjecz_delphinus_flask.blueprints.estados.models import Estado
-from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
+from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
 from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
 from pjecz_delphinus_flask.blueprints.udp_personas_domicilios.forms import UdpPersonaDomicilioForm
@@ -120,7 +120,9 @@ def new(udp_persona_id):
         return redirect(bitacora.url)
     estado_por_defecto = Estado.query.filter_by(clave=current_app.config["ESTADO_CLAVE"]).first()
     if estado_por_defecto:
-        municipio_por_defecto = Municipio.query.filter_by(estado_id=estado_por_defecto.id, clave=current_app.config["MUNICIPIO_CLAVE"]).first()
+        municipio_por_defecto = Municipio.query.filter_by(
+            estado_id=estado_por_defecto.id, clave=current_app.config["MUNICIPIO_CLAVE"]
+        ).first()
     else:
         municipio_por_defecto = None
     return render_template(
