@@ -2,8 +2,6 @@
 Autoridad, modelos
 """
 
-from typing import List
-
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,8 +28,8 @@ class Autoridad(database.Model, UniversalMixin):
     descripcion_corta: Mapped[str] = mapped_column(String(64))
 
     # Hijos
-    udp_personas_atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="autoridad")
-    usuarios: Mapped[List["Usuario"]] = relationship(back_populates="autoridad")
+    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="autoridad")
+    usuarios: Mapped[list["Usuario"]] = relationship(back_populates="autoridad")
 
     @property
     def nombre(self):

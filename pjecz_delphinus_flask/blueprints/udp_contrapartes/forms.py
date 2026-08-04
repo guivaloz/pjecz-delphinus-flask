@@ -1,5 +1,5 @@
 """
-UDP Personas Contrapartes, formularios
+UDP Contrapartes, formularios
 """
 
 from flask_wtf import FlaskForm
@@ -7,8 +7,8 @@ from wtforms import DateField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Optional
 
 
-class UdpPersonaContraparteForm(FlaskForm):
-    """Formulario UdpPersonaContraparte"""
+class UdpContraparteForm(FlaskForm):
+    """Formulario UdpContraparte"""
 
     nombres = StringField("Nombres", validators=[DataRequired(), Length(max=256)])
     apellido_primero = StringField("Apellido Primero", validators=[DataRequired(), Length(max=256)])

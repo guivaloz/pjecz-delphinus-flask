@@ -15,9 +15,9 @@ from pjecz_delphinus_flask.blueprints.permisos.views import permisos
 from pjecz_delphinus_flask.blueprints.roles.views import roles
 from pjecz_delphinus_flask.blueprints.sistemas.views import sistemas
 from pjecz_delphinus_flask.blueprints.tareas.views import tareas
+from pjecz_delphinus_flask.blueprints.udp_contrapartes.views import udp_contrapartes
 from pjecz_delphinus_flask.blueprints.udp_personas.views import udp_personas
 from pjecz_delphinus_flask.blueprints.udp_personas_atenciones.views import udp_personas_atenciones
-from pjecz_delphinus_flask.blueprints.udp_personas_contrapartes.views import udp_personas_contrapartes
 from pjecz_delphinus_flask.blueprints.udp_personas_domicilios.views import udp_personas_domicilios
 from pjecz_delphinus_flask.blueprints.udp_personas_ingresos.views import udp_personas_ingresos
 from pjecz_delphinus_flask.blueprints.udp_personas_visitas.views import udp_personas_visitas

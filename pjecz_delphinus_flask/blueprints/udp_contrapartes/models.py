@@ -1,29 +1,26 @@
 """
-UDP Personas Contrapartes, modelos
+UDP Contrapartes, modelos
 """
 
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import CHAR, ForeignKey, String
+from sqlalchemy import CHAR, Index, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from pjecz_delphinus_flask.config.extensions import database
 from pjecz_delphinus_flask.lib.universal_mixin import UniversalMixin
 
 
-class UdpPersonaContraparte(database.Model, UniversalMixin):
-    """UdpPersonaContraparte"""
+class UdpContraparte(database.Model, UniversalMixin):
+    """UdpContraparte"""
 
     # Nombre de la tabla
-    __tablename__ = "udp_personas_contrapartes"
+    __tablename__ = "udp_contrapartes"
+    __table_args__ = (Index("ix_udp_contrapartes_curp_no_vacio", "curp", unique=True, postgresql_where=text("curp != ''")),)
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
-
-    # Claves foráneas
-    udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
-    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_personas_contrapartes")
 
     # Columnas
     nombres: Mapped[str] = mapped_column(String(256))
@@ -32,6 +29,9 @@ class UdpPersonaContraparte(database.Model, UniversalMixin):
     curp: Mapped[Optional[str]] = mapped_column(CHAR(18), default="", server_default="")
     nacimiento_fecha: Mapped[Optional[date]]
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
+
+    # Hijos
+    udp_atenciones_contrapartes: Mapped[list["UdpAtencionContraparte"]] = relationship(back_populates="udp_contraparte")
 
     @property
     def nombre_completo(self):
@@ -44,4 +44,4 @@ class UdpPersonaContraparte(database.Model, UniversalMixin):
 
     def __repr__(self):
         """Representación"""
-        return f"<UdpPersonaContraparte {self.nombre_completo}>"
+        return f"<UdpContraparte {self.nombre_completo}>"

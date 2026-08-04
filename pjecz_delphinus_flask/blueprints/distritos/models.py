@@ -2,8 +2,6 @@
 Distritos
 """
 
-from typing import List
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -26,7 +24,7 @@ class Distrito(database.Model, UniversalMixin):
     nombre_corto: Mapped[str] = mapped_column(String(64))
 
     # Hijos
-    autoridades: Mapped[List["Autoridad"]] = relationship(back_populates="distrito")
+    autoridades: Mapped[list["Autoridad"]] = relationship(back_populates="distrito")
 
     def __repr__(self):
         """Representación"""

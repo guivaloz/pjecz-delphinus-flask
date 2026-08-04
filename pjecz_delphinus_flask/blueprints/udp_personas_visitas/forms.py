@@ -4,7 +4,7 @@ UDP Personas Visitas, formularios
 
 from flask_wtf import FlaskForm
 from wtforms import SelectField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Optional, Length
+from wtforms.validators import DataRequired, Length, Optional
 
 
 class UdpPersonaVisitaForm(FlaskForm):

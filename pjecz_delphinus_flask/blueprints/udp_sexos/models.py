@@ -2,8 +2,6 @@
 UDP Sexos, modelos
 """
 
-from typing import List
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,7 +22,8 @@ class UdpSexo(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256), unique=True)
 
     # Hijos
-    udp_personas: Mapped[List["UdpPersona"]] = relationship(back_populates="udp_sexo")
+    udp_contrapartes: Mapped[list["UdpContraparte"]] = relationship(back_populates="udp_sexo")
+    udp_personas: Mapped[list["UdpPersona"]] = relationship(back_populates="udp_sexo")
 
     def __repr__(self):
         """Representación"""
