@@ -31,41 +31,47 @@ from pjecz_delphinus_flask.blueprints.usuarios_roles.views import usuarios_roles
 from pjecz_delphinus_flask.config.extensions import authentication, csrf, database, login_manager, moment
 from pjecz_delphinus_flask.config.settings import Settings
 
-# Crear la aplicación
-app = Flask(__name__)
-app.add_url_rule("/favicon.ico", endpoint="sistemas.favicon")
-app.config.from_object(Settings())
 
-# Registrar blueprints
-app.register_blueprint(autoridades)
-app.register_blueprint(bitacoras)
-app.register_blueprint(distritos)
-app.register_blueprint(entradas_salidas)
-app.register_blueprint(estados)
-app.register_blueprint(modulos)
-app.register_blueprint(municipios)
-app.register_blueprint(permisos)
-app.register_blueprint(roles)
-app.register_blueprint(sistemas)
-app.register_blueprint(tareas)
-app.register_blueprint(usuarios)
-app.register_blueprint(usuarios_roles)
-app.register_blueprint(udp_sexos)
-app.register_blueprint(udp_tipos_condiciones)
-app.register_blueprint(udp_tipos_tramites)
-app.register_blueprint(udp_tipos_visitas)
-app.register_blueprint(udp_personas)
-app.register_blueprint(udp_personas_atenciones)
-app.register_blueprint(udp_personas_contrapartes)
-app.register_blueprint(udp_personas_domicilios)
-app.register_blueprint(udp_personas_ingresos)
-app.register_blueprint(udp_personas_visitas)
+def create_app():
+    """
+    Create and configure the Flask application.
+    """
+    app = Flask(__name__)
+    app.add_url_rule("/favicon.ico", endpoint="sistemas.favicon")
+    app.config.from_object(Settings())
 
-# Inicializar extensiones
-csrf.init_app(app)
-database.init_app(app)
-login_manager.init_app(app)
-moment.init_app(app)
+    # Registrar blueprints
+    app.register_blueprint(autoridades)
+    app.register_blueprint(bitacoras)
+    app.register_blueprint(distritos)
+    app.register_blueprint(entradas_salidas)
+    app.register_blueprint(estados)
+    app.register_blueprint(modulos)
+    app.register_blueprint(municipios)
+    app.register_blueprint(permisos)
+    app.register_blueprint(roles)
+    app.register_blueprint(sistemas)
+    app.register_blueprint(tareas)
+    app.register_blueprint(usuarios)
+    app.register_blueprint(usuarios_roles)
+    app.register_blueprint(udp_sexos)
+    app.register_blueprint(udp_tipos_condiciones)
+    app.register_blueprint(udp_tipos_tramites)
+    app.register_blueprint(udp_tipos_visitas)
+    app.register_blueprint(udp_personas)
+    app.register_blueprint(udp_personas_atenciones)
+    app.register_blueprint(udp_personas_contrapartes)
+    app.register_blueprint(udp_personas_domicilios)
+    app.register_blueprint(udp_personas_ingresos)
+    app.register_blueprint(udp_personas_visitas)
 
-# Cargar el modelo de usuario para la autenticación
-authentication(Usuario)
+    # Inicializar extensiones
+    csrf.init_app(app)
+    database.init_app(app)
+    login_manager.init_app(app)
+    moment.init_app(app)
+
+    # Cargar el modelo de usuario para la autenticación
+    authentication(Usuario)
+
+    return app
