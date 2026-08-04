@@ -2,8 +2,6 @@
 Modulos
 """
 
-from typing import List
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -28,8 +26,8 @@ class Modulo(database.Model, UniversalMixin):
     en_navegacion: Mapped[bool] = mapped_column(default=False)
 
     # Hijos
-    bitacoras: Mapped[List["Bitacora"]] = relationship(back_populates="modulo")
-    permisos: Mapped[List["Permiso"]] = relationship(back_populates="modulo")
+    bitacoras: Mapped[list["Bitacora"]] = relationship(back_populates="modulo")
+    permisos: Mapped[list["Permiso"]] = relationship(back_populates="modulo")
 
     def __repr__(self):
         """Representación"""

@@ -45,6 +45,14 @@ def datatable_json():
         apellido_primero = safe_string(request.form["apellido_primero"], save_enie=True)
         if apellido_primero != "":
             consulta = consulta.filter(UdpContraparte.apellido_primero.contains(apellido_primero))
+    if "apellido_segundo" in request.form:
+        apellido_segundo = safe_string(request.form["apellido_segundo"], save_enie=True)
+        if apellido_segundo != "":
+            consulta = consulta.filter(UdpContraparte.apellido_segundo.contains(apellido_segundo))
+    if "curp" in request.form:
+        curp = safe_string(request.form["curp"])
+        if curp != "":
+            consulta = consulta.filter(UdpContraparte.curp.contains(curp))
     registros = (
         consulta.order_by(UdpContraparte.apellido_primero, UdpContraparte.apellido_segundo, UdpContraparte.nombres)
         .offset(start)
@@ -57,12 +65,12 @@ def datatable_json():
         data.append(
             {
                 "detalle": {
-                    "id": resultado.id,
+                    "nombre_completo": resultado.nombre_completo,
                     "url": url_for("udp_contrapartes.detail", udp_contraparte_id=resultado.id),
                 },
-                "nombre_completo": resultado.nombre_completo,
                 "curp": resultado.curp or "",
                 "nacimiento_fecha": resultado.nacimiento_fecha.strftime("%Y-%m-%d") if resultado.nacimiento_fecha else "",
+                "udp_sexo_nombre": resultado.udp_sexo.nombre,
             }
         )
     return output_datatable_json(draw, total, data)

@@ -2,8 +2,6 @@
 UDP Tipos Visitas, modelos
 """
 
-from typing import List
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -24,7 +22,7 @@ class UdpTipoVisita(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256), unique=True)
 
     # Hijos
-    udp_personas_visitas: Mapped[List["UdpPersonaVisita"]] = relationship(back_populates="udp_tipo_visita")
+    udp_personas_visitas: Mapped[list["UdpPersonaVisita"]] = relationship(back_populates="udp_tipo_visita")
 
     def __repr__(self):
         """Representación"""

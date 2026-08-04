@@ -1,0 +1,35 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Contraparte {{ udp_contraparte.nombre_completo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Contraparte ' + udp_contraparte.nombre_completo) %}
+        {{ topbar.button_previous('Contrapartes', url_for('udp_contrapartes.list_active')) }}
+        {% if current_user.can_edit('UDP CONTRAPARTES') %}
+            {{ topbar.button_edit('Editar', url_for('udp_contrapartes.edit', udp_contraparte_id=udp_contraparte.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP CONTRAPARTES') %}
+            {% if udp_contraparte.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_contrapartes.delete', udp_contraparte_id=udp_contraparte.id)) }}{% endif %}
+            {% if udp_contraparte.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_contrapartes.recover', udp_contraparte_id=udp_contraparte.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_contraparte.estatus) %}
+        {{ detail.label_value('Nombre Completo', udp_contraparte.nombre_completo) }}
+        {{ detail.label_value('CURP', udp_contraparte.curp) }}
+        {{ detail.label_value('Fecha de Nacimiento', udp_contraparte.nacimiento_fecha | string if udp_contraparte.nacimiento_fecha else '') }}
+        {{ detail.label_value('Observaciones', udp_contraparte.observaciones) }}
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP CONTRAPARTES') %}
+        {% if udp_contraparte.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar a ' + udp_contraparte.nombre_completo + '?') }}{% endif %}
+        {% if udp_contraparte.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar a ' + udp_contraparte.nombre_completo + '?') }}{% endif %}
+    {% endif %}
+{% endblock %}

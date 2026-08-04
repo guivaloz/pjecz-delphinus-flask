@@ -3,7 +3,7 @@ Usuarios, modelos
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 
 from flask import current_app
 from flask_login import UserMixin
@@ -45,12 +45,12 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     contrasena: Mapped[Optional[str]] = mapped_column(String(256))
 
     # Hijos
-    bitacoras: Mapped[List["Bitacora"]] = relationship(back_populates="usuario")
-    entradas_salidas: Mapped[List["EntradaSalida"]] = relationship(back_populates="usuario")
-    tareas: Mapped[List["Tarea"]] = relationship(back_populates="usuario")
-    udp_personas_atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="usuario")
-    udp_personas_visitas: Mapped[List["UdpPersonaVisita"]] = relationship(back_populates="usuario")
-    usuarios_roles: Mapped[List["UsuarioRol"]] = relationship(back_populates="usuario")
+    bitacoras: Mapped[list["Bitacora"]] = relationship(back_populates="usuario")
+    entradas_salidas: Mapped[list["EntradaSalida"]] = relationship(back_populates="usuario")
+    tareas: Mapped[list["Tarea"]] = relationship(back_populates="usuario")
+    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="usuario")
+    udp_personas_visitas: Mapped[list["UdpPersonaVisita"]] = relationship(back_populates="usuario")
+    usuarios_roles: Mapped[list["UsuarioRol"]] = relationship(back_populates="usuario")
 
     # Propiedades
     modulos_menu_principal_consultados = []

@@ -22,6 +22,10 @@ class UdpContraparte(database.Model, UniversalMixin):
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
 
+    # Claves foráneas
+    udp_sexo_id: Mapped[int] = mapped_column(ForeignKey("udp_sexos.id"))
+    udp_sexo: Mapped["UdpSexo"] = relationship(back_populates="udp_personas")
+
     # Columnas
     nombres: Mapped[str] = mapped_column(String(256))
     apellido_primero: Mapped[str] = mapped_column(String(256))
