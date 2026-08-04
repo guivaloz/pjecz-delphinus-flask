@@ -3,9 +3,9 @@ UDP Personas, modelos
 """
 
 from datetime import date
-from typing import List, Optional
+from typing import Optional
 
-from sqlalchemy import CHAR, ForeignKey, String
+from sqlalchemy import CHAR, ForeignKey, Index, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from pjecz_delphinus_flask.config.extensions import database
@@ -17,6 +17,7 @@ class UdpPersona(database.Model, UniversalMixin):
 
     # Nombre de la tabla
     __tablename__ = "udp_personas"
+    __table_args__ = (Index("ix_udp_personas_curp_no_vacio", "curp", unique=True, postgresql_where=text("curp != ''")),)
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -36,11 +37,11 @@ class UdpPersona(database.Model, UniversalMixin):
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 
     # Hijos
-    udp_personas_atenciones: Mapped[List["UdpPersonaAtencion"]] = relationship(back_populates="udp_persona")
-    udp_personas_contrapartes: Mapped[List["UdpPersonaContraparte"]] = relationship(back_populates="udp_persona")
-    udp_personas_domicilios: Mapped[List["UdpPersonaDomicilio"]] = relationship(back_populates="udp_persona")
-    udp_personas_ingresos: Mapped[List["UdpPersonaIngreso"]] = relationship(back_populates="udp_persona")
-    udp_personas_visitas: Mapped[List["UdpPersonaVisita"]] = relationship(back_populates="udp_persona")
+    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="udp_persona")
+    udp_personas_contrapartes: Mapped[list["UdpPersonaContraparte"]] = relationship(back_populates="udp_persona")
+    udp_personas_domicilios: Mapped[list["UdpPersonaDomicilio"]] = relationship(back_populates="udp_persona")
+    udp_personas_ingresos: Mapped[list["UdpPersonaIngreso"]] = relationship(back_populates="udp_persona")
+    udp_personas_visitas: Mapped[list["UdpPersonaVisita"]] = relationship(back_populates="udp_persona")
 
     @property
     def nombre_completo(self):
