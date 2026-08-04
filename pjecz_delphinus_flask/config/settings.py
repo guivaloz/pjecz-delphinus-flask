@@ -27,16 +27,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str = get_secret("SQLALCHEMY_DATABASE_URI")
     TZ: str = get_secret("TZ", "America/Mexico_City")
 
-    class Config:
-        """Load configuration"""
-
-        @classmethod
-        def customise_sources(cls, init_settings, env_settings, file_secret_settings):
-            """Change the order of precedence of settings sources"""
-            return env_settings, file_secret_settings, init_settings
-
-
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """Get Settings"""
     return Settings()
