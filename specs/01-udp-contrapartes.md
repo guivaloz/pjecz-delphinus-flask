@@ -1,6 +1,6 @@
 # SPEC 01 — UDP Contrapartes independientes con vínculo a atenciones
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** —
 > **Date:** 2026-08-04
 > **Objective:** Crear tabla `udp_contrapartes` independiente, tabla intermedia `udp_atenciones_contrapartes`, y restricción de unicidad CURP que permita valores vacíos.
@@ -103,18 +103,18 @@ Permite múltiples filas con CURP vacía, pero enforce unicidad cuando CURP tien
 
 ## Acceptance criteria
 
-- [ ] Tabla `udp_contrapartes` creada con columnas: id, nombres, apellido_primero, apellido_segundo, curp, nacimiento_fecha, observaciones, creado, modificado, estatus.
-- [ ] Tabla `udp_contrapartes` sin FK a `udp_personas`.
-- [ ] Índice parcial CURP único en `udp_contrapartes` (permite vacíos, rechaza duplicados con valor).
-- [ ] Índice parcial CURP único en `udp_personas` (mismo comportamiento).
-- [ ] Tabla intermedia `udp_atenciones_contrapartes` creada con FKs a `udp_personas_atenciones` y `udp_contrapartes`.
-- [ ] `udp_atencion_id` tiene `unique=True` en la tabla intermedia.
-- [ ] Relación `udp_atencion_contraparte` agregada en `UdpPersonaAtencion`.
-- [ ] Blueprint `udp_contrapartes` registrado en `app.py`.
-- [ ] Módulo `UDP CONTRAPARTES` presente en `seed/modulos.csv`.
-- [ ] Permisos del módulo presente en `seed/roles_permisos.csv`.
-- [ ] CRUD funcional: listar, ver detalle, crear, editar, eliminar (soft delete), recuperar.
-- [ ] Código pasa `black .`, `isort .`, `ruff check .`, `basedpyright`.
+- [x] Tabla `udp_contrapartes` creada con columnas: id, nombres, apellido_primero, apellido_segundo, curp, nacimiento_fecha, observaciones, creado, modificado, estatus.
+- [x] Tabla `udp_contrapartes` sin FK a `udp_personas`.
+- [x] Índice parcial CURP único en `udp_contrapartes` (permite vacíos, rechaza duplicados con valor).
+- [x] Índice parcial CURP único en `udp_personas` (mismo comportamiento).
+- [x] Tabla intermedia `udp_atenciones_contrapartes` creada con FKs a `udp_personas_atenciones` y `udp_contrapartes`.
+- [x] `udp_atencion_id` tiene `unique=True` en la tabla intermedia.
+- [x] Relación `udp_atencion_contraparte` agregada en `UdpPersonaAtencion`.
+- [x] Blueprint `udp_contrapartes` registrado en `app.py`.
+- [x] Módulo `UDP CONTRAPARTES` presente en `seed/modulos.csv`.
+- [x] Permisos del módulo presente en `seed/roles_permisos.csv`.
+- [x] CRUD funcional: listar, ver detalle, crear, editar, eliminar (soft delete), recuperar.
+- [x] Código pasa `black .`, `isort .`, `ruff check .`, `basedpyright`.
 
 ## Decisions
 
