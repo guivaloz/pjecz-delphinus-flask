@@ -9,8 +9,8 @@
         {% if current_user.can_view('UDP PERSONAS') %}
             {{ topbar.button('Personas', url_for('udp_personas.list_active'), 'mdi mdi-account') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
-            {{ topbar.button('Atenciones', url_for('udp_personas_atenciones.list_active'), 'mdi mdi-clipboard-check') }}
+        {% if current_user.can_view('UDP ATENCIONES') %}
+            {{ topbar.button('Atenciones', url_for('udp_atenciones.list_active'), 'mdi mdi-clipboard-check') }}
         {% endif %}
         {% if current_user.can_admin('UDP CONTRAPARTES') %}
             {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_contrapartes.list_inactive')) }}{% endif %}

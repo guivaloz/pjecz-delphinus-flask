@@ -19,8 +19,8 @@ class UdpAtencionContraparte(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Claves foráneas
-    udp_atencion_id: Mapped[int] = mapped_column(ForeignKey("udp_personas_atenciones.id"), unique=True)
-    udp_atencion: Mapped["UdpPersonaAtencion"] = relationship(back_populates="udp_atencion_contraparte")
+    udp_atencion_id: Mapped[int] = mapped_column(ForeignKey("udp_atenciones.id"), unique=True)
+    udp_atencion: Mapped["UdpAtencion"] = relationship(back_populates="udp_atencion_contraparte")  # Solo una contraparte
     udp_contraparte_id: Mapped[int] = mapped_column(ForeignKey("udp_contrapartes.id"))
     udp_contraparte: Mapped["UdpContraparte"] = relationship(back_populates="udp_atenciones_contrapartes")
 

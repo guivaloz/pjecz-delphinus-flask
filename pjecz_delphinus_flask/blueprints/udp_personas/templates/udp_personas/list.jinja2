@@ -6,20 +6,20 @@
 
 {% block topbar_actions %}
     {% call topbar.page_buttons(titulo) %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
-            {{ topbar.button('Atenciones', url_for('udp_personas_atenciones.list_active'), 'mdi mdi-clipboard-check') }}
+        {% if current_user.can_view('UDP ATENCIONES') %}
+            {{ topbar.button('Atenciones', url_for('udp_atenciones.list_active'), 'mdi mdi-clipboard-check') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
+        {% if current_user.can_view('UDP CONTRAPARTES') %}
             {{ topbar.button('Contrapartes', url_for('udp_personas_contrapartes.list_active'), 'mdi mdi-account-multiple') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
-            {{ topbar.button('Domicilios', url_for('udp_personas_domicilios.list_active'), 'mdi mdi-home') }}
+        {% if current_user.can_view('UDP DOMICILIOS') %}
+            {{ topbar.button('Domicilios', url_for('udp_domicilios.list_active'), 'mdi mdi-home') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
-            {{ topbar.button('Ingresos', url_for('udp_personas_ingresos.list_active'), 'mdi mdi-cash') }}
+        {% if current_user.can_view('UDP INGRESOS') %}
+            {{ topbar.button('Ingresos', url_for('udp_ingresos.list_active'), 'mdi mdi-cash') }}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
-            {{ topbar.button('Visitas', url_for('udp_personas_visitas.list_active'), 'mdi mdi-car') }}
+        {% if current_user.can_view('UDP VISITAS') %}
+            {{ topbar.button('Visitas', url_for('udp_visitas.list_active'), 'mdi mdi-car') }}
         {% endif %}
         {% if current_user.can_admin('UDP PERSONAS') %}
             {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_personas.list_inactive')) }}{% endif %}

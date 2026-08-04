@@ -27,7 +27,7 @@ class Municipio(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256))
 
     # Hijos
-    udp_personas_domicilios: Mapped[list["UdpPersonaDomicilio"]] = relationship(back_populates="municipio")
+    udp_domicilios: Mapped[list["UdpDomicilio"]] = relationship(back_populates="municipio")
 
     def __repr__(self):
         """Representación"""

@@ -34,7 +34,7 @@
         </div>
     {% endcall %}
     {% if udp_persona.estatus == 'A' %}
-        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
+        {% if current_user.can_view('UDP DOMICILIOS') %}
             {% call detail.card('Domicilios') %}
                 <table id="domicilios_datatable" class="table display nowrap" style="width:100%">
                     <thead>
@@ -47,12 +47,12 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS DOMICILIOS') %}
-                    <a href="{{ url_for('udp_personas_domicilios.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Domicilio</a>
+                {% if current_user.can_insert('UDP DOMICILIOS') %}
+                    <a href="{{ url_for('udp_domicilios.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Domicilio</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
+        {% if current_user.can_view('UDP INGRESOS') %}
             {% call detail.card('Ingresos') %}
                 <table id="ingresos_datatable" class="table display nowrap" style="width:100%">
                     <thead>
@@ -63,12 +63,12 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS INGRESOS') %}
-                    <a href="{{ url_for('udp_personas_ingresos.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Ingreso</a>
+                {% if current_user.can_insert('UDP INGRESOS') %}
+                    <a href="{{ url_for('udp_ingresos.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Ingreso</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
+        {% if current_user.can_view('UDP CONTRAPARTES') %}
             {% call detail.card('Contrapartes') %}
                 <table id="contrapartes_datatable" class="table display nowrap" style="width:100%">
                     <thead>
@@ -80,12 +80,12 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS CONTRAPARTES') %}
+                {% if current_user.can_insert('UDP CONTRAPARTES') %}
                     <a href="{{ url_for('udp_personas_contrapartes.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Contraparte</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+        {% if current_user.can_view('UDP ATENCIONES') %}
             {% call detail.card('Atenciones') %}
                 <table id="atenciones_datatable" class="table display nowrap" style="width:100%">
                     <thead>
@@ -98,12 +98,12 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
-                    <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
+                {% if current_user.can_insert('UDP ATENCIONES') %}
+                    <a href="{{ url_for('udp_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
+        {% if current_user.can_view('UDP VISITAS') %}
             {% call detail.card('Visitas') %}
                 <table id="visitas_datatable" class="table display nowrap" style="width:100%">
                     <thead>
@@ -114,8 +114,8 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS VISITAS') %}
-                    <a href="{{ url_for('udp_personas_visitas.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
+                {% if current_user.can_insert('UDP VISITAS') %}
+                    <a href="{{ url_for('udp_visitas.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
@@ -133,10 +133,10 @@
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
     </script>
     {% if udp_persona.estatus == 'A' %}
-        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
+        {% if current_user.can_view('UDP DOMICILIOS') %}
             <script>
                 let configDTDomicilios = constructorDataTable.config();
-                configDTDomicilios['ajax']['url'] = "{{ url_for('udp_personas_domicilios.datatable_json') }}";
+                configDTDomicilios['ajax']['url'] = "{{ url_for('udp_domicilios.datatable_json') }}";
                 configDTDomicilios['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
                 configDTDomicilios['columns'] = [
                     { data: 'detalle' },
@@ -158,10 +158,10 @@
                 filtrosDTDomicilios.precargar();
             </script>
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
+        {% if current_user.can_view('UDP INGRESOS') %}
             <script>
                 let configDTIngresos = constructorDataTable.config();
-                configDTIngresos['ajax']['url'] = "{{ url_for('udp_personas_ingresos.datatable_json') }}";
+                configDTIngresos['ajax']['url'] = "{{ url_for('udp_ingresos.datatable_json') }}";
                 configDTIngresos['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
                 configDTIngresos['columns'] = [
                     { data: 'detalle' },
@@ -181,7 +181,7 @@
                 filtrosDTIngresos.precargar();
             </script>
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
+        {% if current_user.can_view('UDP CONTRAPARTES') %}
             <script>
                 let configDTContrapartes = constructorDataTable.config();
                 configDTContrapartes['ajax']['url'] = "{{ url_for('udp_personas_contrapartes.datatable_json') }}";
@@ -205,10 +205,10 @@
                 filtrosDTContrapartes.precargar();
             </script>
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+        {% if current_user.can_view('UDP ATENCIONES') %}
             <script>
                 let configDTAtenciones = constructorDataTable.config();
-                configDTAtenciones['ajax']['url'] = "{{ url_for('udp_personas_atenciones.datatable_json') }}";
+                configDTAtenciones['ajax']['url'] = "{{ url_for('udp_atenciones.datatable_json') }}";
                 configDTAtenciones['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
                 configDTAtenciones['columns'] = [
                     { data: 'detalle' },
@@ -230,10 +230,10 @@
                 filtrosDTAtenciones.precargar();
             </script>
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
+        {% if current_user.can_view('UDP VISITAS') %}
             <script>
                 let configDTVisitas = constructorDataTable.config();
-                configDTVisitas['ajax']['url'] = "{{ url_for('udp_personas_visitas.datatable_json') }}";
+                configDTVisitas['ajax']['url'] = "{{ url_for('udp_visitas.datatable_json') }}";
                 configDTVisitas['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
                 configDTVisitas['columns'] = [
                     { data: 'detalle' },

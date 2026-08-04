@@ -28,7 +28,7 @@ class Autoridad(database.Model, UniversalMixin):
     descripcion_corta: Mapped[str] = mapped_column(String(64))
 
     # Hijos
-    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="autoridad")
+    udp_atenciones: Mapped[list["UdpAtencion"]] = relationship(back_populates="autoridad")
     usuarios: Mapped[list["Usuario"]] = relationship(back_populates="autoridad")
 
     @property

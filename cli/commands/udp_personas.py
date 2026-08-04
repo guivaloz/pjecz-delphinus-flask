@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.progress import Progress
 from typer import Typer
 
-from pjecz_delphinus_flask.app import app
+from pjecz_delphinus_flask.app import create_app
 from pjecz_delphinus_flask.blueprints.autoridades.models import Autoridad
 from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.udp_sexos.models import UdpSexo
@@ -28,6 +28,7 @@ from pjecz_delphinus_flask.lib.safe_string import safe_email, safe_string
 UDP_PERSONAS_CSV = "seed/PERSONAS.csv"
 
 # Inicializar la aplicación
+app = create_app()
 app.app_context().push()
 
 usuarios = Typer()
