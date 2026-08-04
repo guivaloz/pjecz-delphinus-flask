@@ -21,6 +21,7 @@ from pjecz_delphinus_flask.blueprints.udp_personas_contrapartes.views import udp
 from pjecz_delphinus_flask.blueprints.udp_personas_domicilios.views import udp_personas_domicilios
 from pjecz_delphinus_flask.blueprints.udp_personas_ingresos.views import udp_personas_ingresos
 from pjecz_delphinus_flask.blueprints.udp_personas_visitas.views import udp_personas_visitas
+from pjecz_delphinus_flask.blueprints.udp_contrapartes.views import udp_contrapartes
 from pjecz_delphinus_flask.blueprints.udp_sexos.views import udp_sexos
 from pjecz_delphinus_flask.blueprints.udp_tipos_condiciones.views import udp_tipos_condiciones
 from pjecz_delphinus_flask.blueprints.udp_tipos_tramites.views import udp_tipos_tramites
@@ -60,6 +61,7 @@ app.register_blueprint(udp_personas_contrapartes)
 app.register_blueprint(udp_personas_domicilios)
 app.register_blueprint(udp_personas_ingresos)
 app.register_blueprint(udp_personas_visitas)
+app.register_blueprint(udp_contrapartes)
 
 # Inicializar extensiones
 csrf.init_app(app)
