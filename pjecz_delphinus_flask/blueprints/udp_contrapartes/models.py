@@ -5,7 +5,7 @@ UDP Contrapartes, modelos
 from datetime import date
 from typing import Optional
 
-from sqlalchemy import CHAR, Index, String, text
+from sqlalchemy import CHAR, ForeignKey, Index, String, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from pjecz_delphinus_flask.config.extensions import database
@@ -21,6 +21,10 @@ class UdpContraparte(database.Model, UniversalMixin):
 
     # Clave primaria
     id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Claves foráneas
+    udp_sexo_id: Mapped[int] = mapped_column(ForeignKey("udp_sexos.id"))
+    udp_sexo: Mapped["UdpSexo"] = relationship(back_populates="udp_personas")
 
     # Columnas
     nombres: Mapped[str] = mapped_column(String(256))

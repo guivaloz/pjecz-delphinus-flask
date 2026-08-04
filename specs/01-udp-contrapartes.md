@@ -46,7 +46,7 @@ class UdpContraparte(database.Model, UniversalMixin):
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 
     # Hijos
-    udp_atenciones_contrapartes: Mapped[List["UdpAtencionContraparte"]] = relationship(back_populates="udp_contraparte")
+    udp_atenciones_contrapartes: Mapped[list["UdpAtencionContraparte"]] = relationship(back_populates="udp_contraparte")
 ```
 
 Misma estructura de columnas que `udp_personas_contrapartes`. Sin FK a `udp_personas`. Propiedad `nombre_completo` idéntica.

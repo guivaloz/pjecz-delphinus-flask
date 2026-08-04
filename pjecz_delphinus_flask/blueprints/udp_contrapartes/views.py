@@ -124,8 +124,9 @@ def new():
             nombres=nombres,
             apellido_primero=apellido_primero,
             apellido_segundo=safe_string(form.apellido_segundo.data, save_enie=True),
-            curp=curp,
             nacimiento_fecha=form.nacimiento_fecha.data,
+            udp_sexo_id=form.udp_sexo.data,
+            curp=curp,
             observaciones=safe_string(form.observaciones.data, save_enie=True, max_len=1024),
         )
         udp_contraparte.save()
@@ -151,8 +152,9 @@ def edit(udp_contraparte_id):
         udp_contraparte.nombres = safe_string(form.nombres.data, save_enie=True)
         udp_contraparte.apellido_primero = safe_string(form.apellido_primero.data, save_enie=True)
         udp_contraparte.apellido_segundo = safe_string(form.apellido_segundo.data, save_enie=True)
-        udp_contraparte.curp = safe_string(form.curp.data)
         udp_contraparte.nacimiento_fecha = form.nacimiento_fecha.data
+        udp_contraparte.udp_sexo_id = form.udp_sexo.data
+        udp_contraparte.curp = safe_string(form.curp.data)
         udp_contraparte.observaciones = safe_string(form.observaciones.data, save_enie=True, max_len=1024)
         udp_contraparte.save()
         bitacora = Bitacora(
@@ -167,8 +169,9 @@ def edit(udp_contraparte_id):
     form.nombres.data = udp_contraparte.nombres
     form.apellido_primero.data = udp_contraparte.apellido_primero
     form.apellido_segundo.data = udp_contraparte.apellido_segundo
-    form.curp.data = udp_contraparte.curp
     form.nacimiento_fecha.data = udp_contraparte.nacimiento_fecha
+    form.udp_sexo.data = udp_contraparte.udp_sexo_id
+    form.curp.data = udp_contraparte.curp
     form.observaciones.data = udp_contraparte.observaciones
     return render_template("udp_contrapartes/edit.jinja2", form=form, udp_contraparte=udp_contraparte)
 

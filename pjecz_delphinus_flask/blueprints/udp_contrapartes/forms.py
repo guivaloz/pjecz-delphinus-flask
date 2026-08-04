@@ -3,13 +3,14 @@ UDP Contrapartes, formularios
 """
 
 from flask_wtf import FlaskForm
-from wtforms import DateField, StringField, SubmitField, TextAreaField
+from wtforms import DateField, SelectField, StringField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Optional
 
 
 class UdpContraparteForm(FlaskForm):
     """Formulario UdpContraparte"""
 
+    udp_sexo = SelectField("Sexo", choices=None, validate_choice=False)
     nombres = StringField("Nombres", validators=[DataRequired(), Length(max=256)])
     apellido_primero = StringField("Apellido Primero", validators=[DataRequired(), Length(max=256)])
     apellido_segundo = StringField("Apellido Segundo", validators=[Optional(), Length(max=256)])
