@@ -2,15 +2,16 @@
 UDP Atenciones Contrapartes, vistas
 """
 
-import json
-
-from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
+from pjecz_delphinus_flask.blueprints.bitacoras.models import Bitacora
+from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
 from pjecz_delphinus_flask.blueprints.udp_atenciones_contrapartes.models import UdpAtencionContraparte
 from pjecz_delphinus_flask.blueprints.usuarios.decorators import permission_required
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
+from pjecz_delphinus_flask.lib.safe_string import safe_message
 
 MODULO = "UDP ATENCIONES CONTRAPARTES"
 
@@ -99,3 +100,39 @@ def detail(udp_atencion_contraparte_id):
     """Detalle de una Atencion-Contraparte"""
     udp_atencion_contrapartes = UdpAtencionContraparte.query.get_or_404(udp_atencion_contraparte_id)
     return render_template("udp_atenciones_contrapartes/detail.jinja2", udp_atencion_contrapartes=udp_atencion_contrapartes)
+
+
+@udp_atenciones_contrapartes.route("/udp_atenciones_contrapartes/eliminar/<udp_atencion_contraparte_id>")
+@permission_required(MODULO, Permiso.ADMINISTRAR)
+def delete(udp_atencion_contraparte_id):
+    """Eliminar Atencion-Contraparte"""
+    udp_atencion_contraparte = UdpAtencionContraparte.query.get_or_404(udp_atencion_contraparte_id)
+    if udp_atencion_contraparte.estatus == "A":
+        udp_atencion_contraparte.delete()
+        bitacora = Bitacora(
+            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+            usuario=current_user,
+            descripcion=safe_message(f"Eliminado Atencion-Contraparte {udp_atencion_contraparte.id}"),
+            url=url_for("udp_atenciones_contrapartes.detail", udp_atencion_contraparte_id=udp_atencion_contraparte.id),
+        )
+        bitacora.save()
+        flash(bitacora.descripcion, "success")
+    return redirect(url_for("udp_atenciones_contrapartes.detail", udp_atencion_contraparte_id=udp_atencion_contraparte.id))
+
+
+@udp_atenciones_contrapartes.route("/udp_atenciones_contrapartes/recuperar/<udp_atencion_contraparte_id>")
+@permission_required(MODULO, Permiso.ADMINISTRAR)
+def recover(udp_atencion_contraparte_id):
+    """Recuperar Atencion-Contraparte"""
+    udp_atencion_contraparte = UdpAtencionContraparte.query.get_or_404(udp_atencion_contraparte_id)
+    if udp_atencion_contraparte.estatus == "B":
+        udp_atencion_contraparte.recover()
+        bitacora = Bitacora(
+            modulo=Modulo.query.filter_by(nombre=MODULO).first(),
+            usuario=current_user,
+            descripcion=safe_message(f"Recuperado Atencion-Contraparte {udp_atencion_contraparte.id}"),
+            url=url_for("udp_atenciones_contrapartes.detail", udp_atencion_contraparte_id=udp_atencion_contraparte.id),
+        )
+        bitacora.save()
+        flash(bitacora.descripcion, "success")
+    return redirect(url_for("udp_atenciones_contrapartes.detail", udp_atencion_contraparte_id=udp_atencion_contraparte.id))
