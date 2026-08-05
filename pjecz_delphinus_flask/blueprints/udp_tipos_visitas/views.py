@@ -62,7 +62,7 @@ def list_active():
     return render_template(
         "udp_tipos_visitas/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
-        titulo="Tipos Visitas",
+        titulo="Tipos de Visitas",
         estatus="A",
     )
 
@@ -74,7 +74,7 @@ def list_inactive():
     return render_template(
         "udp_tipos_visitas/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
-        titulo="Tipos Visitas inactivos",
+        titulo="Tipos de Visitas inactivos",
         estatus="B",
     )
 

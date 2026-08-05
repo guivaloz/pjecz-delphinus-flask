@@ -54,7 +54,7 @@
                     </div>
                 </form>
                 <div id="resultadosContrapartes"></div>
-                <a href="{{ url_for('udp_personas_contrapartes.list_active') }}" class="btn btn-outline-primary btn-sm">Ver todas las contrapartes</a>
+                <a href="{{ url_for('udp_contrapartes.list_active') }}" class="btn btn-outline-primary btn-sm">Ver todas las contrapartes</a>
             {% endcall %}
         </div>
     </div>
@@ -128,7 +128,7 @@
                 resultados.innerHTML = '<p class="text-muted">Escriba un nombre o apellido para buscar.</p>';
                 return;
             }
-            fetch("{{ url_for('udp_personas_contrapartes.datatable_json') }}", {
+            fetch("{{ url_for('udp_contrapartes.datatable_json') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
