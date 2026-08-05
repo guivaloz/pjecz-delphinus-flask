@@ -30,12 +30,12 @@ class UdpAtencion(database.Model, UniversalMixin):
     usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
     usuario: Mapped["Usuario"] = relationship(back_populates="udp_atenciones")
 
-    # Hijos: Solo se puede tener una contraparte por atención, por lo que se define una relación uno a uno
-    udp_atencion_contraparte: Mapped[Optional["UdpAtencionContraparte"]] = relationship(back_populates="udp_atencion")
-
     # Columnas
     expediente: Mapped[Optional[str]] = mapped_column(String(32), default="", server_default="")
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
+
+    # Hijos: Solo se puede tener una contraparte por atención, por lo que se define una relación uno a uno
+    udp_atencion_contraparte: Mapped[Optional["UdpAtencionContraparte"]] = relationship(back_populates="udp_atencion")
 
     def __repr__(self):
         """Representación"""

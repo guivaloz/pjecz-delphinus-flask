@@ -12,7 +12,7 @@ from pjecz_delphinus_flask.blueprints.udp_atenciones_contrapartes.models import 
 from pjecz_delphinus_flask.blueprints.usuarios.decorators import permission_required
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
 
-MODULO = "MODULO"
+MODULO = "UDP ATENCIONES CONTRAPARTES"
 
 udp_atenciones_contrapartes = Blueprint("udp_atenciones_contrapartes", __name__, template_folder="templates")
 
@@ -41,7 +41,7 @@ def datatable_json():
     if "udp_contraparte_id" in request.form:
         consulta = consulta.filter_by(udp_contraparte_id=request.form["udp_contraparte_id"])
     # Ordenar y paginar
-    registros = consulta.order_by(UdpAtencionContraparte.id).offset(start).limit(rows_per_page).all()
+    registros = consulta.order_by(UdpAtencionContraparte.id.desc()).offset(start).limit(rows_per_page).all()
     total = consulta.count()
     # Elaborar datos para DataTable
     data = []
@@ -52,12 +52,17 @@ def datatable_json():
                     "id": resultado.id,
                     "url": url_for("udp_atenciones_contrapartes.detail", udp_atencion_contraparte_id=resultado.id),
                 },
-                "atencion": {
+                "udp_atencion_creado": {
                     "id": resultado.udp_atencion.id,
+                    "creado": resultado.udp_atencion.creado.strftime("%Y-%m-%d %H:%M:%S"),
                     "url": url_for("udp_atenciones.detail", udp_atencion_id=resultado.udp_atencion.id),
                 },
-                "contraparte": {
+                "udp_atencion_autoridad_clave": resultado.udp_atencion.autoridad.clave,
+                "udp_atencion_expediente": resultado.udp_atencion.expediente,
+                "udp_atencion_tipo_tramite_nombre": resultado.udp_atencion.udp_tipo_tramite.nombre,
+                "udp_contraparte_nombre_completo": {
                     "id": resultado.udp_contraparte.id,
+                    "nombre_completo": resultado.udp_contraparte.nombre_completo,
                     "url": url_for("udp_contrapartes.detail", udp_contraparte_id=resultado.udp_contraparte.id),
                 },
             }
