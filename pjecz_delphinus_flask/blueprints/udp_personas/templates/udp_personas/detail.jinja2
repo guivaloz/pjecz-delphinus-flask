@@ -34,63 +34,12 @@
         </div>
     {% endcall %}
     {% if udp_persona.estatus == 'A' %}
-        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
-            {% call detail.card('Domicilios') %}
-                <table id="domicilios_datatable" class="table display nowrap" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Calle</th>
-                            <th>Num Ext</th>
-                            <th>Colonia</th>
-                            <th>Municipio</th>
-                        </tr>
-                    </thead>
-                </table>
-                {% if current_user.can_insert('UDP PERSONAS DOMICILIOS') %}
-                    <a href="{{ url_for('udp_personas_domicilios.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Domicilio</a>
-                {% endif %}
-            {% endcall %}
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
-            {% call detail.card('Ingresos') %}
-                <table id="ingresos_datatable" class="table display nowrap" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Ocupación</th>
-                            <th>Ingresos</th>
-                        </tr>
-                    </thead>
-                </table>
-                {% if current_user.can_insert('UDP PERSONAS INGRESOS') %}
-                    <a href="{{ url_for('udp_personas_ingresos.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Ingreso</a>
-                {% endif %}
-            {% endcall %}
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
-            {% call detail.card('Contrapartes') %}
-                <table id="contrapartes_datatable" class="table display nowrap" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>CURP</th>
-                            <th>Nacimiento</th>
-                        </tr>
-                    </thead>
-                </table>
-                {% if current_user.can_insert('UDP PERSONAS CONTRAPARTES') %}
-                    <a href="{{ url_for('udp_personas_contrapartes.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Contraparte</a>
-                {% endif %}
-            {% endcall %}
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
+        {% if current_user.can_view('UDP ATENCIONES') %}
             {% call detail.card('Atenciones') %}
                 <table id="atenciones_datatable" class="table display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Fecha Hora</th>
                             <th>Tipo Trámite</th>
                             <th>Usuario</th>
                             <th>Autoridad</th>
@@ -98,24 +47,58 @@
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS ATENCIONES') %}
-                    <a href="{{ url_for('udp_personas_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
+                {% if current_user.can_insert('UDP ATENCIONES') %}
+                    <a href="{{ url_for('udp_atenciones.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Atención</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
+        {% if current_user.can_view('UDP DOMICILIOS') %}
+            {% call detail.card('Domicilios') %}
+                <table id="domicilios_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Calle</th>
+                            <th>Num. Ext.</th>
+                            <th>Num. Int.</th>
+                            <th>Colonia</th>
+                            <th>Municipio</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP DOMICILIOS') %}
+                    <a href="{{ url_for('udp_domicilios.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Domicilio</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP INGRESOS') %}
+            {% call detail.card('Ingresos') %}
+                <table id="ingresos_datatable" class="table display nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha Hora</th>
+                            <th>Ocupación</th>
+                            <th>Ingresos</th>
+                        </tr>
+                    </thead>
+                </table>
+                {% if current_user.can_insert('UDP INGRESOS') %}
+                    <a href="{{ url_for('udp_ingresos.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Ingreso</a>
+                {% endif %}
+            {% endcall %}
+        {% endif %}
+        {% if current_user.can_view('UDP VISITAS') %}
             {% call detail.card('Visitas') %}
                 <table id="visitas_datatable" class="table display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Fecha Hora</th>
                             <th>Tipo Visita</th>
-                            <th>Usuario</th>
+                            <th>Observaciones</th>
                         </tr>
                     </thead>
                 </table>
-                {% if current_user.can_insert('UDP PERSONAS VISITAS') %}
-                    <a href="{{ url_for('udp_personas_visitas.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
+                {% if current_user.can_insert('UDP VISITAS') %}
+                    <a href="{{ url_for('udp_visitas.new', udp_persona_id=udp_persona.id) }}" class="btn btn-primary">Agregar Visita</a>
                 {% endif %}
             {% endcall %}
         {% endif %}
@@ -132,126 +115,100 @@
     <script>
         const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
     </script>
-    {% if udp_persona.estatus == 'A' %}
-        {% if current_user.can_view('UDP PERSONAS DOMICILIOS') %}
-            <script>
-                let configDTDomicilios = constructorDataTable.config();
-                configDTDomicilios['ajax']['url'] = "{{ url_for('udp_personas_domicilios.datatable_json') }}";
-                configDTDomicilios['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
-                configDTDomicilios['columns'] = [
-                    { data: 'detalle' },
-                    { data: 'calle' },
-                    { data: 'num_exterior' },
-                    { data: 'colonia' },
-                    { data: 'municipio_nombre' }
-                ];
-                configDTDomicilios['columnDefs'] = [
-                    {
-                        targets: 0,
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.id + '</a>';
-                        }
+    {% if current_user.can_view('UDP ATENCIONES') %}
+        <script>
+            let configDTAtenciones = constructorDataTable.config();
+            configDTAtenciones['ajax']['url'] = "{{ url_for('udp_atenciones.datatable_json') }}";
+            configDTAtenciones['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+            configDTAtenciones['columns'] = [
+                { data: 'detalle' },
+                { data: 'udp_tipo_tramite_nombre' },
+                { data: 'usuario_email' },
+                { data: 'autoridad_clave' },
+                { data: 'expediente' }
+            ];
+            configDTAtenciones['columnDefs'] = [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.creado + '</a>';
                     }
-                ];
-                const filtrosDTDomicilios = new FiltrosDataTable('#domicilios_datatable', configDTDomicilios);
-                filtrosDTDomicilios.precargar();
-            </script>
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS INGRESOS') %}
-            <script>
-                let configDTIngresos = constructorDataTable.config();
-                configDTIngresos['ajax']['url'] = "{{ url_for('udp_personas_ingresos.datatable_json') }}";
-                configDTIngresos['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
-                configDTIngresos['columns'] = [
-                    { data: 'detalle' },
-                    { data: 'ocupacion' },
-                    { data: 'ingresos' }
-                ];
-                configDTIngresos['columnDefs'] = [
-                    {
-                        targets: 0,
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.id + '</a>';
-                        }
+                }
+            ];
+            const filtrosDTAtenciones = new FiltrosDataTable('#atenciones_datatable', configDTAtenciones);
+            filtrosDTAtenciones.precargar();
+        </script>
+    {% endif %}
+    {% if current_user.can_view('UDP DOMICILIOS') %}
+        <script>
+            let configDTDomicilios = constructorDataTable.config();
+            configDTDomicilios['ajax']['url'] = "{{ url_for('udp_domicilios.datatable_json') }}";
+            configDTDomicilios['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+            configDTDomicilios['columns'] = [
+                { data: 'detalle' },
+                { data: 'num_exterior' },
+                { data: 'num_interior' },
+                { data: 'colonia' },
+                { data: 'municipio_nombre' }
+            ];
+            configDTDomicilios['columnDefs'] = [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.calle + '</a>';
                     }
-                ];
-                const filtrosDTIngresos = new FiltrosDataTable('#ingresos_datatable', configDTIngresos);
-                filtrosDTIngresos.precargar();
-            </script>
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS CONTRAPARTES') %}
-            <script>
-                let configDTContrapartes = constructorDataTable.config();
-                configDTContrapartes['ajax']['url'] = "{{ url_for('udp_personas_contrapartes.datatable_json') }}";
-                configDTContrapartes['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
-                configDTContrapartes['columns'] = [
-                    { data: 'detalle' },
-                    { data: 'nombre_completo' },
-                    { data: 'curp' },
-                    { data: 'nacimiento_fecha' }
-                ];
-                configDTContrapartes['columnDefs'] = [
-                    {
-                        targets: 0,
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.id + '</a>';
-                        }
+                }
+            ];
+            const filtrosDTDomicilios = new FiltrosDataTable('#domicilios_datatable', configDTDomicilios);
+            filtrosDTDomicilios.precargar();
+        </script>
+    {% endif %}
+    {% if current_user.can_view('UDP INGRESOS') %}
+        <script>
+            let configDTIngresos = constructorDataTable.config();
+            configDTIngresos['ajax']['url'] = "{{ url_for('udp_ingresos.datatable_json') }}";
+            configDTIngresos['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+            configDTIngresos['columns'] = [
+                { data: 'detalle' },
+                { data: 'ocupacion' },
+                { data: 'ingresos' }
+            ];
+            configDTIngresos['columnDefs'] = [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.creado + '</a>';
                     }
-                ];
-                const filtrosDTContrapartes = new FiltrosDataTable('#contrapartes_datatable', configDTContrapartes);
-                filtrosDTContrapartes.precargar();
-            </script>
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS ATENCIONES') %}
-            <script>
-                let configDTAtenciones = constructorDataTable.config();
-                configDTAtenciones['ajax']['url'] = "{{ url_for('udp_personas_atenciones.datatable_json') }}";
-                configDTAtenciones['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
-                configDTAtenciones['columns'] = [
-                    { data: 'detalle' },
-                    { data: 'udp_tipo_tramite_nombre' },
-                    { data: 'usuario_email' },
-                    { data: 'autoridad_clave' },
-                    { data: 'expediente' }
-                ];
-                configDTAtenciones['columnDefs'] = [
-                    {
-                        targets: 0,
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.id + '</a>';
-                        }
+                }
+            ];
+            const filtrosDTIngresos = new FiltrosDataTable('#ingresos_datatable', configDTIngresos);
+            filtrosDTIngresos.precargar();
+        </script>
+    {% endif %}
+    {% if current_user.can_view('UDP VISITAS') %}
+        <script>
+            let configDTVisitas = constructorDataTable.config();
+            configDTVisitas['ajax']['url'] = "{{ url_for('udp_visitas.datatable_json') }}";
+            configDTVisitas['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
+            configDTVisitas['columns'] = [
+                { data: 'detalle' },
+                { data: 'udp_tipo_visita_nombre' },
+                { data: 'observaciones' }
+            ];
+            configDTVisitas['columnDefs'] = [
+                {
+                    targets: 0,
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return '<a href="' + data.url + '">' + data.creado + '</a>';
                     }
-                ];
-                const filtrosDTAtenciones = new FiltrosDataTable('#atenciones_datatable', configDTAtenciones);
-                filtrosDTAtenciones.precargar();
-            </script>
-        {% endif %}
-        {% if current_user.can_view('UDP PERSONAS VISITAS') %}
-            <script>
-                let configDTVisitas = constructorDataTable.config();
-                configDTVisitas['ajax']['url'] = "{{ url_for('udp_personas_visitas.datatable_json') }}";
-                configDTVisitas['ajax']['data'] = { 'estatus': 'A', 'udp_persona_id': {{ udp_persona.id }} };
-                configDTVisitas['columns'] = [
-                    { data: 'detalle' },
-                    { data: 'udp_tipo_visita_nombre' },
-                    { data: 'usuario_email' }
-                ];
-                configDTVisitas['columnDefs'] = [
-                    {
-                        targets: 0,
-                        data: null,
-                        render: function(data, type, row, meta) {
-                            return '<a href="' + data.url + '">' + data.id + '</a>';
-                        }
-                    }
-                ];
-                const filtrosDTVisitas = new FiltrosDataTable('#visitas_datatable', configDTVisitas);
-                filtrosDTVisitas.precargar();
-            </script>
-        {% endif %}
+                }
+            ];
+            const filtrosDTVisitas = new FiltrosDataTable('#visitas_datatable', configDTVisitas);
+            filtrosDTVisitas.precargar();
+        </script>
     {% endif %}
 {% endblock %}

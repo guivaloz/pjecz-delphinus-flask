@@ -1,0 +1,55 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/list.jinja2' as list %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons(titulo) %}
+        {% if current_user.can_admin('UDP VISITAS') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_visitas.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_visitas.list_active')) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call list.card() %}
+        <table id="udp_visitas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Fecha Hora</th>
+                    <th>Tipo Visita</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script src="/static/js/datatables-constructor.js"></script>
+    <script src="/static/js/datatables-filtros.js"></script>
+    <script>
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDT = constructorDataTable.config();
+        configDT['ajax']['url'] = "{{ url_for('udp_visitas.datatable_json') }}";
+        configDT['ajax']['data'] = {{ filtros }};
+        configDT['columns'] = [
+            { data: 'detalle' },
+            { data: 'udp_tipo_visita_nombre' },
+            { data: 'observaciones' }
+        ];
+        configDT['columnDefs'] = [
+            {
+                targets: 0,
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.creado + '</a>';
+                }
+            }
+        ];
+        const filtrosDT = new FiltrosDataTable('#udp_atenciones_datatable', configDT);
+        filtrosDT.precargar();
+    </script>
+{% endblock %}

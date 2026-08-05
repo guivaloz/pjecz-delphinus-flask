@@ -19,7 +19,7 @@
   - Eliminar el módulo `UDP PERSONAS CONTRAPARTES` de los archivos semilla.
   - Eliminar el blueprint `udp_personas_contrapartes` y sus vistas/formularios/plantillas.
   - Retirar la relación `udp_personas_contrapartes` de `UdpPersona`.
-- Modificar las vistas/formularios de `udp_personas_atenciones` para seleccionar contraparte en el formulario de atención.
+- Modificar las vistas/formularios de `udp_atenciones` para seleccionar contraparte en el formulario de atención.
   - En el formulario de atención, agregar un selector de contraparte que liste las contrapartes existentes (de `udp_contrapartes`) que llame a la vista `select_json` para filtrar por CURP o nombre o apellido paterno o apellido materno.
 
 **Fuera de alcance (para specs futuros):**
@@ -46,7 +46,7 @@ class UdpContraparte(database.Model, UniversalMixin):
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 
     # Hijos
-    udp_atenciones_contrapartes: Mapped[List["UdpAtencionContraparte"]] = relationship(back_populates="udp_contraparte")
+    udp_atenciones_contrapartes: Mapped[list["UdpAtencionContraparte"]] = relationship(back_populates="udp_contraparte")
 ```
 
 Misma estructura de columnas que `udp_personas_contrapartes`. Sin FK a `udp_personas`. Propiedad `nombre_completo` idéntica.
@@ -61,8 +61,8 @@ class UdpAtencionContraparte(database.Model, UniversalMixin):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     # Claves foráneas
-    udp_atencion: Mapped["UdpPersonaAtencion"] = relationship(back_populates="udp_atencion_contraparte")
-    udp_atencion_id: Mapped[int] = mapped_column(ForeignKey("udp_personas_atenciones.id"), unique=True)
+    udp_atencion: Mapped["UdpAtencion"] = relationship(back_populates="udp_atencion_contraparte")
+    udp_atencion_id: Mapped[int] = mapped_column(ForeignKey("udp_atenciones.id"), unique=True)
     udp_contraparte: Mapped["UdpContraparte"] = relationship(back_populates="udp_atenciones_contrapartes")
     udp_contraparte_id: Mapped[int] = mapped_column(ForeignKey("udp_contrapartes.id"))
 ```
@@ -91,7 +91,7 @@ Permite múltiples filas con CURP vacía, pero enforce unicidad cuando CURP tien
 
 1. Crear blueprint `blueprints/udp_contrapartes/` con `__init__.py` vacío y `models.py` con el modelo `UdpContraparte` incluyendo el índice parcial CURP.
 2. Crear `blueprints/udp_atenciones_contrapartes/models.py` con el modelo `UdpAtencionContraparte` y sus relaciones.
-3. Modificar `blueprints/udp_personas_atenciones/models.py` para agregar la relación `udp_atencion_contraparte` con `back_populates`.
+3. Modificar `blueprints/udp_atenciones/models.py` para agregar la relación `udp_atencion_contraparte` con `back_populates`.
 4. Modificar `blueprints/udp_personas/models.py` para agregar el índice parcial CURP.
 5. Crear `blueprints/udp_contrapartes/forms.py` con `UdpContraparteForm` (mismos campos que `UdpPersonaContraparteForm`).
 6. Crear `blueprints/udp_contrapartes/views.py` con vistas: `datatable_json`, `list_active`, `list_inactive`, `detail`, `new`, `edit`, `delete`, `recover`.
@@ -107,9 +107,9 @@ Permite múltiples filas con CURP vacía, pero enforce unicidad cuando CURP tien
 - [x] Tabla `udp_contrapartes` sin FK a `udp_personas`.
 - [x] Índice parcial CURP único en `udp_contrapartes` (permite vacíos, rechaza duplicados con valor).
 - [x] Índice parcial CURP único en `udp_personas` (mismo comportamiento).
-- [x] Tabla intermedia `udp_atenciones_contrapartes` creada con FKs a `udp_personas_atenciones` y `udp_contrapartes`.
+- [x] Tabla intermedia `udp_atenciones_contrapartes` creada con FKs a `udp_atenciones` y `udp_contrapartes`.
 - [x] `udp_atencion_id` tiene `unique=True` en la tabla intermedia.
-- [x] Relación `udp_atencion_contraparte` agregada en `UdpPersonaAtencion`.
+- [x] Relación `udp_atencion_contraparte` agregada en `UdpAtencion`.
 - [x] Blueprint `udp_contrapartes` registrado en `app.py`.
 - [x] Módulo `UDP CONTRAPARTES` presente en `seed/modulos.csv`.
 - [x] Permisos del módulo presente en `seed/roles_permisos.csv`.
@@ -119,7 +119,7 @@ Permite múltiples filas con CURP vacía, pero enforce unicidad cuando CURP tien
 ## Decisions
 
 - **Sí:** Blueprint independiente `udp_contrapartes` separado de `udp_personas_contrapartes`. La tabla nueva es conceptualmente distinta (contraparte genérica, no ligada a una persona).
-- **Sí:** Tabla intermedia `udp_atenciones_contrapartes` en lugar de FK directo en `udp_personas_atenciones`. Permite mantener la relación limpia y extensible.
+- **Sí:** Tabla intermedia `udp_atenciones_contrapartes` en lugar de FK directo en `udp_atenciones`. Permite mantener la relación limpia y extensible.
 - **Sí:** Índice parcial con `postgresql_where=text("curp != ''")` para unicidad CURP. En PostgreSQL, los índices parciales permiten múltiples filas con cadena vacía pero rechazan duplicados con valor.
 - **Si:** Eliminar el blueprint `udp_personas_contrapartes` existente.
 - **No:** Migración de datos. La base de datos es de prueba y se reconstruye manualmente.

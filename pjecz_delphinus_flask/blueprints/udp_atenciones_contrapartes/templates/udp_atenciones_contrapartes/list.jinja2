@@ -1,0 +1,78 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/list.jinja2' as list %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons(titulo) %}
+        {% if current_user.can_admin('UDP ATENCIONES CONTRAPARTES') %}
+            {% if estatus == 'A' %}{{ topbar.button_list_inactive('Inactivos', url_for('udp_atenciones_contrapartes.list_inactive')) }}{% endif %}
+            {% if estatus == 'B' %}{{ topbar.button_list_active('Activos', url_for('udp_atenciones_contrapartes.list_active')) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call list.card() %}
+        <!-- DataTable udp_atenciones_contrapartes -->
+        <table id="udp_atenciones_contrapartes_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>A. Fecha Hora</th>
+                    <th>A. Autoridad</th>
+                    <th>A. Expediente</th>
+                    <th>A. Tipo de Trámite</th>
+                    <th>C. Nombre completo</th>
+                </tr>
+            </thead>
+        </table>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    <script src="{{ url_for('static', filename='js/datatables-constructor.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/datatables-filtros.js') }}"></script>
+    <script>
+        // DataTable udp_atenciones_contrapartes
+        const constructorDataTable = new ConfigDataTable( '{{ csrf_token() }}' );
+        let configDataTable = constructorDataTable.config();
+        configDataTable['ajax']['url'] = "{{ url_for('udp_atenciones_contrapartes.datatable_json') }}";
+        configDataTable['ajax']['data'] = {{ filtros }};
+        configDataTable['columns'] = [
+            { data: 'detalle' },
+            { data: 'udp_atencion_creado' },
+            { data: 'udp_atencion_autoridad_clave' },
+            { data: 'udp_atencion_expediente' },
+            { data: 'udp_atencion_tipo_tramite_nombre' },
+            { data: 'udp_contraparte_nombre_completo' }
+        ];
+        configDataTable['columnDefs'] = [
+            {
+                targets: 0, // detalle
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.id + '</a>';
+                }
+            },
+            {
+                targets: 1, // udp_atencion_creado
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.creado + '</a>';
+                }
+            },
+            {
+                targets: 5, // udp_contraparte_nombre_completo
+                data: null,
+                render: function(data, type, row, meta) {
+                    return '<a href="' + data.url + '">' + data.nombre_completo + '</a>';
+                }
+            }
+        ];
+        // Filtros udp_atenciones_contrapartes
+        const filtrosUdpAtencionesContrapartes = new FiltrosDataTable('#udp_atenciones_contrapartes_datatable', configDataTable);
+        filtrosUdpAtencionesContrapartes.precargar();
+    </script>
+{% endblock %}

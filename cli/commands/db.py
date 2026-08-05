@@ -8,13 +8,11 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-import psycopg2
 from dotenv import load_dotenv
 from rich.console import Console
-from rich.progress import Progress
 from typer import Typer
 
-from pjecz_delphinus_flask.app import app
+from pjecz_delphinus_flask.app import create_app
 from pjecz_delphinus_flask.blueprints.autoridades.models import Autoridad
 from pjecz_delphinus_flask.blueprints.distritos.models import Distrito
 from pjecz_delphinus_flask.blueprints.estados.models import Estado
@@ -57,6 +55,7 @@ DB_PORT = int(os.getenv("DB_PORT", "5432"))
 DB_NAME = os.getenv("DB_NAME")
 
 # Inicializar la aplicación
+app = create_app()
 app.app_context().push()
 
 db = Typer()

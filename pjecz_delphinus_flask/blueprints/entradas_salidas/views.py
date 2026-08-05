@@ -51,7 +51,7 @@ def datatable_json():
     for resultado in registros:
         data.append(
             {
-                "creado": resultado.creado.strftime("%Y-%m-%dT%H:%M:%S"),
+                "creado": resultado.creado.strftime("%Y-%m-%d %H:%M:%S"),
                 "tipo": resultado.tipo,
                 "usuario": {
                     "email": resultado.usuario.email,

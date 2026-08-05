@@ -1,0 +1,40 @@
+{% extends 'layouts/app.jinja2' %}
+{% import 'macros/detail.jinja2' as detail %}
+{% import 'macros/modals.jinja2' as modals %}
+{% import 'macros/topbar.jinja2' as topbar %}
+
+{% block title %}Atención de {{ udp_atencion.udp_persona.nombre_completo }}{% endblock %}
+
+{% block topbar_actions %}
+    {% call topbar.page_buttons('Atención de ' + udp_atencion.udp_persona.nombre_completo) %}
+        {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_atencion.udp_persona_id)) }}
+        {% if current_user.can_edit('UDP ATENCIONES') %}
+            {{ topbar.button_edit('Editar', url_for('udp_atenciones.edit', udp_atencion_id=udp_atencion.id)) }}
+        {% endif %}
+        {% if current_user.can_admin('UDP ATENCIONES') %}
+            {% if udp_atencion.estatus == 'A' %}{{ topbar.button_delete('Eliminar', url_for('udp_atenciones.delete', udp_atencion_id=udp_atencion.id)) }}{% endif %}
+            {% if udp_atencion.estatus == 'B' %}{{ topbar.button_recover('Recuperar', url_for('udp_atenciones.recover', udp_atencion_id=udp_atencion.id)) }}{% endif %}
+        {% endif %}
+    {% endcall %}
+{% endblock %}
+
+{% block content %}
+    {% call detail.card(estatus=udp_atencion.estatus) %}
+        <div class="row">
+            {{ detail.label_value('Persona', udp_atencion.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_atencion.udp_persona_id)) }}
+            {{ detail.label_value('Tipo de Trámite', udp_atencion.udp_tipo_tramite.nombre) }}
+            {{ detail.label_value('Distrito', udp_atencion.autoridad.distrito.clave + ' : ' + udp_atencion.autoridad.distrito.nombre_corto) }}
+            {{ detail.label_value('Autoridad', udp_atencion.autoridad.clave + ' : ' + udp_atencion.autoridad.descripcion_corta) }}
+            {{ detail.label_value('Expediente', udp_atencion.expediente) }}
+            {{ detail.label_value('Observaciones', udp_atencion.observaciones) }}
+            {{ detail.label_value('Asignado al usuario', udp_atencion.usuario.email) }}
+        </div>
+    {% endcall %}
+{% endblock %}
+
+{% block custom_javascript %}
+    {% if current_user.can_admin('UDP ATENCIONES') %}
+        {% if udp_atencion.estatus == 'A' %}{{ modals.custom_javascript_delete('Eliminar', '¿Eliminar esta atención?') }}{% endif %}
+        {% if udp_atencion.estatus == 'B' %}{{ modals.custom_javascript_recover('Recuperar', '¿Recuperar esta atención?') }}{% endif %}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,35 @@
+"""
+UDP Ingresos, modelos
+"""
+
+from decimal import Decimal
+from typing import Optional
+
+from sqlalchemy import ForeignKey, Numeric, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from pjecz_delphinus_flask.config.extensions import database
+from pjecz_delphinus_flask.lib.universal_mixin import UniversalMixin
+
+
+class UdpIngreso(database.Model, UniversalMixin):
+    """UdpIngreso"""
+
+    # Nombre de la tabla
+    __tablename__ = "udp_ingresos"
+
+    # Clave primaria
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    # Claves foráneas
+    udp_persona_id: Mapped[int] = mapped_column(ForeignKey("udp_personas.id"))
+    udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_ingresos")
+
+    # Columnas
+    ocupacion: Mapped[str] = mapped_column(String(256))
+    ingresos: Mapped[Decimal] = mapped_column(Numeric(precision=10, scale=2))
+    observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
+
+    def __repr__(self):
+        """Representación"""
+        return f"<UdpIngreso {self.id}>"

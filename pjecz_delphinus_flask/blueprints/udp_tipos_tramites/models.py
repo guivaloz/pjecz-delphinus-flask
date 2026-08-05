@@ -22,7 +22,7 @@ class UdpTipoTramite(database.Model, UniversalMixin):
     nombre: Mapped[str] = mapped_column(String(256), unique=True)
 
     # Hijos
-    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="udp_tipo_tramite")
+    udp_atenciones: Mapped[list["UdpAtencion"]] = relationship(back_populates="udp_tipo_tramite")
 
     def __repr__(self):
         """Representación"""

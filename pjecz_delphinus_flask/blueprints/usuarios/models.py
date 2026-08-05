@@ -35,9 +35,9 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     nombres: Mapped[str] = mapped_column(String(256))
     apellido_paterno: Mapped[str] = mapped_column(String(256))
     apellido_materno: Mapped[str] = mapped_column(String(256))
-    curp: Mapped[str] = mapped_column(String(18), default="", server_default="")
-    puesto: Mapped[str] = mapped_column(String(256), default="", server_default="")
-    titulo: Mapped[Optional[str]] = mapped_column(String(32))
+    curp: Mapped[Optional[str]] = mapped_column(String(18), default="", server_default="")
+    puesto: Mapped[Optional[str]] = mapped_column(String(256), default="", server_default="")
+    titulo: Mapped[Optional[str]] = mapped_column(String(32), default="", server_default="")
 
     # Columnas que NO deben ser expuestas
     api_key: Mapped[Optional[str]] = mapped_column(String(128))
@@ -48,8 +48,7 @@ class Usuario(database.Model, UserMixin, UniversalMixin):
     bitacoras: Mapped[list["Bitacora"]] = relationship(back_populates="usuario")
     entradas_salidas: Mapped[list["EntradaSalida"]] = relationship(back_populates="usuario")
     tareas: Mapped[list["Tarea"]] = relationship(back_populates="usuario")
-    udp_personas_atenciones: Mapped[list["UdpPersonaAtencion"]] = relationship(back_populates="usuario")
-    udp_personas_visitas: Mapped[list["UdpPersonaVisita"]] = relationship(back_populates="usuario")
+    udp_atenciones: Mapped[list["UdpAtencion"]] = relationship(back_populates="usuario")
     usuarios_roles: Mapped[list["UsuarioRol"]] = relationship(back_populates="usuario")
 
     # Propiedades
