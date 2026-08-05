@@ -25,8 +25,6 @@ class UdpVisita(database.Model, UniversalMixin):
     udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_visitas")
     udp_tipo_visita_id: Mapped[int] = mapped_column(ForeignKey("udp_tipos_visitas.id"))
     udp_tipo_visita: Mapped["UdpTipoVisita"] = relationship(back_populates="udp_visitas")
-    usuario_id: Mapped[int] = mapped_column(ForeignKey("usuarios.id"))
-    usuario: Mapped["Usuario"] = relationship(back_populates="udp_visitas")
 
     # Columnas
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")

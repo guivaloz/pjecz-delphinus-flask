@@ -21,8 +21,8 @@
 
 {% block custom_javascript %}
     <script>
-        const udpTipoVisitaSelect = document.getElementById('udp_tipo_visita');
         // Cargar las opciones del select udp_tipo_visita
+        const udpTipoVisitaSelect = document.getElementById('udp_tipo_visita');
         fetch("{{ url_for('udp_tipos_visitas.select_json') }}")
             .then(response => response.json())
             .then(data => {

@@ -34,7 +34,7 @@
 {% block custom_javascript %}
     <!-- Select estado-municipio -->
     <script>
-        const estadoSeelect = document.getElementById('estado');
+        const estadoSelect = document.getElementById('estado');
         const municipioSelect = document.getElementById('municipio');
         // Cargar las opciones del select estado
         fetch("{{ url_for('estados.select_json') }}")
@@ -44,14 +44,14 @@
                     const option = document.createElement('option');
                     option.value = item.id;
                     option.text = item.text;
-                    estadoSeelect.appendChild(option);
+                    estadoSelect.appendChild(option);
                 });
-                estadoSeelect.value = {{ estado_por_defecto.id }}; // Seleccionar el estado por defecto
-                estadoSeelect.dispatchEvent(new Event('change'));
+                estadoSelect.value = {{ estado_por_defecto.id }}; // Seleccionar el estado por defecto
+                estadoSelect.dispatchEvent(new Event('change'));
             });
         // Cargar las opciones del select municipio, si el estado cambia
-        estadoSeelect.addEventListener('change', () => {
-            fetch(`{{ url_for('municipios.select_json') }}?estado_id=${estadoSeelect.value}`)
+        estadoSelect.addEventListener('change', () => {
+            fetch(`{{ url_for('municipios.select_json') }}?estado_id=${estadoSelect.value}`)
                 .then(response => response.json())
                 .then(data => {
                     municipioSelect.innerHTML = '';
@@ -61,7 +61,7 @@
                         option.text = item.text;
                         municipioSelect.appendChild(option);
                     });
-                    if (estadoSeelect.value == {{ estado_por_defecto.id }}) {
+                    if (estadoSelect.value == {{ estado_por_defecto.id }}) {
                         municipioSelect.value = {{ municipio_por_defecto.id }}; // Seleccionar el municipio por defecto
                     }
                 });

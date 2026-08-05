@@ -2,15 +2,15 @@
 {% import 'macros/form.jinja2' as f with context %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Editar Ingreso {{ udp_persona_ingreso.id }}{% endblock %}
+{% block title %}Editar Ingreso {{ udp_ingreso.id }}{% endblock %}
 
 {% block topbar_actions %}
-    {{ topbar.page('Editar Ingreso ' + udp_persona_ingreso.id | string) }}
+    {{ topbar.page('Editar Ingreso ' + udp_ingreso.id | string) }}
 {% endblock %}
 
 {% block content %}
     {% call f.card() %}
-        {% set form_kwargs = {'udp_persona_ingreso_id': udp_persona_ingreso.id} %}
+        {% set form_kwargs = {'udp_ingreso_id': udp_ingreso.id} %}
         {% call f.form_tag('udp_ingresos.edit', fid='ingreso_form', **form_kwargs) %}
             {% call f.form_group(form.ocupacion) %}{% endcall %}
             {% call f.form_group(form.ingresos) %}{% endcall %}

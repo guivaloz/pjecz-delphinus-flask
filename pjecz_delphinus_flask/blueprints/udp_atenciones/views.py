@@ -31,7 +31,7 @@ def before_request():
 
 @udp_atenciones.route("/udp_atenciones/datatable_json", methods=["GET", "POST"])
 def datatable_json():
-    """DataTable JSON para listado de UDP Atenciones"""
+    """DataTable JSON para listado de Atenciones"""
     draw, start, rows_per_page = get_datatable_parameters()
     consulta = UdpAtencion.query
     if "estatus" in request.form:
@@ -61,7 +61,7 @@ def datatable_json():
 
 @udp_atenciones.route("/udp_atenciones")
 def list_active():
-    """Listado de UDP Atenciones activos"""
+    """Listado de Atenciones activas"""
     return render_template(
         "udp_atenciones/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
@@ -73,7 +73,7 @@ def list_active():
 @udp_atenciones.route("/udp_atenciones/inactivos")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def list_inactive():
-    """Listado de UDP Atenciones inactivos"""
+    """Listado de Atenciones inactivas"""
     return render_template(
         "udp_atenciones/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
@@ -84,7 +84,7 @@ def list_inactive():
 
 @udp_atenciones.route("/udp_atenciones/<int:udp_atencion_id>")
 def detail(udp_atencion_id):
-    """Detalle de un UDP Persona Atencion"""
+    """Detalle de una Atención"""
     udp_atencion = UdpAtencion.query.get_or_404(udp_atencion_id)
     return render_template("udp_atenciones/detail.jinja2", udp_atencion=udp_atencion)
 
@@ -92,7 +92,7 @@ def detail(udp_atencion_id):
 @udp_atenciones.route("/udp_atenciones/nuevo/<int:udp_persona_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.CREAR)
 def new(udp_persona_id):
-    """Nuevo UDP Persona Atencion"""
+    """Nueva Atención"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     form = UdpAtencionForm()
     if form.validate_on_submit():
@@ -133,7 +133,7 @@ def new(udp_persona_id):
 @udp_atenciones.route("/udp_atenciones/edicion/<int:udp_atencion_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.MODIFICAR)
 def edit(udp_atencion_id):
-    """Editar UDP Persona Atencion"""
+    """Editar Atención"""
     udp_atencion = UdpAtencion.query.get_or_404(udp_atencion_id)
     form = UdpAtencionForm()
     if form.validate_on_submit():
@@ -170,7 +170,7 @@ def edit(udp_atencion_id):
 @udp_atenciones.route("/udp_atenciones/eliminar/<int:udp_atencion_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def delete(udp_atencion_id):
-    """Eliminar UDP Persona Atencion"""
+    """Eliminar Atención"""
     udp_atencion = UdpAtencion.query.get_or_404(udp_atencion_id)
     if udp_atencion.estatus == "A":
         udp_atencion.delete()
@@ -188,7 +188,7 @@ def delete(udp_atencion_id):
 @udp_atenciones.route("/udp_atenciones/recuperar/<int:udp_atencion_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_atencion_id):
-    """Recuperar UDP Persona Atencion"""
+    """Recuperar Atención"""
     udp_atencion = UdpAtencion.query.get_or_404(udp_atencion_id)
     if udp_atencion.estatus == "B":
         udp_atencion.recover()

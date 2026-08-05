@@ -68,7 +68,7 @@ def datatable_json():
 
 @udp_atenciones_contrapartes.route("/udp_atenciones_contrapartes")
 def list_active():
-    """Listado de Atenciones-Contrapartes activos"""
+    """Listado de Atenciones-Contrapartes activas"""
     return render_template(
         "udp_atenciones_contrapartes/list.jinja2",
         estatus="A",
@@ -80,17 +80,17 @@ def list_active():
 @udp_atenciones_contrapartes.route("/udp_atenciones_contrapartes/inactivos")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def list_inactive():
-    """Listado de Atenciones-Contrapartes inactivos"""
+    """Listado de Atenciones-Contrapartes inactivas"""
     return render_template(
         "udp_atenciones_contrapartes/list.jinja2",
         estatus="B",
         filtros={"estatus": "B"},
-        titulo="Atenciones-Contrapartes inactivos",
+        titulo="Atenciones-Contrapartes eliminadas",
     )
 
 
 @udp_atenciones_contrapartes.route("/udp_atenciones_contrapartes/<int:udp_atencion_contraparte_id>")
 def detail(udp_atencion_contraparte_id):
-    """Detalle de un Atencion-Contraparte"""
+    """Detalle de una Atencion-Contraparte"""
     udp_atencion_contrapartes = UdpAtencionContraparte.query.get_or_404(udp_atencion_contraparte_id)
     return render_template("udp_atenciones_contrapartes/detail.jinja2", udp_atencion_contrapartes=udp_atencion_contrapartes)

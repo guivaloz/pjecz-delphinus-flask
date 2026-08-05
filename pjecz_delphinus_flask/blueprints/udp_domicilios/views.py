@@ -12,9 +12,9 @@ from pjecz_delphinus_flask.blueprints.estados.models import Estado
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
 from pjecz_delphinus_flask.blueprints.municipios.models import Municipio
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
-from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
 from pjecz_delphinus_flask.blueprints.udp_domicilios.forms import UdpDomicilioForm
 from pjecz_delphinus_flask.blueprints.udp_domicilios.models import UdpDomicilio
+from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
 from pjecz_delphinus_flask.blueprints.usuarios.decorators import permission_required
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
 from pjecz_delphinus_flask.lib.safe_string import safe_message, safe_string
@@ -33,7 +33,7 @@ def before_request():
 
 @udp_domicilios.route("/udp_domicilios/datatable_json", methods=["GET", "POST"])
 def datatable_json():
-    """DataTable JSON para listado de UDP Domicilios"""
+    """DataTable JSON para listado de Domicilios"""
     draw, start, rows_per_page = get_datatable_parameters()
     consulta = UdpDomicilio.query
     if "estatus" in request.form:
@@ -50,7 +50,7 @@ def datatable_json():
             {
                 "detalle": {
                     "id": resultado.id,
-                    "url": url_for("udp_domicilios.detail", udp_persona_domicilio_id=resultado.id),
+                    "url": url_for("udp_domicilios.detail", udp_domicilio_id=resultado.id),
                 },
                 "calle": resultado.calle or "",
                 "num_exterior": resultado.num_exterior or "",
@@ -63,7 +63,7 @@ def datatable_json():
 
 @udp_domicilios.route("/udp_domicilios")
 def list_active():
-    """Listado de UDP Domicilios activos"""
+    """Listado de Domicilios activos"""
     return render_template(
         "udp_domicilios/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
@@ -75,7 +75,7 @@ def list_active():
 @udp_domicilios.route("/udp_domicilios/inactivos")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def list_inactive():
-    """Listado de UDP Domicilios inactivos"""
+    """Listado de Domicilios inactivos"""
     return render_template(
         "udp_domicilios/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
@@ -84,21 +84,21 @@ def list_inactive():
     )
 
 
-@udp_domicilios.route("/udp_domicilios/<int:udp_persona_domicilio_id>")
-def detail(udp_persona_domicilio_id):
-    """Detalle de un UDP Persona Domicilio"""
-    udp_persona_domicilio = UdpDomicilio.query.get_or_404(udp_persona_domicilio_id)
-    return render_template("udp_domicilios/detail.jinja2", udp_persona_domicilio=udp_persona_domicilio)
+@udp_domicilios.route("/udp_domicilios/<int:udp_domicilio_id>")
+def detail(udp_domicilio_id):
+    """Detalle de un Domicilio"""
+    udp_domicilio = UdpDomicilio.query.get_or_404(udp_domicilio_id)
+    return render_template("udp_domicilios/detail.jinja2", udp_domicilio=udp_domicilio)
 
 
 @udp_domicilios.route("/udp_domicilios/nuevo/<int:udp_persona_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.CREAR)
 def new(udp_persona_id):
-    """Nuevo UDP Persona Domicilio"""
+    """Nuevo Domicilio"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     form = UdpDomicilioForm()
     if form.validate_on_submit():
-        udp_persona_domicilio = UdpDomicilio(
+        udp_domicilio = UdpDomicilio(
             udp_persona_id=udp_persona.id,
             municipio_id=form.municipio.data,
             calle=safe_string(form.calle.data, save_enie=True),
@@ -108,7 +108,7 @@ def new(udp_persona_id):
             codigo_postal=form.codigo_postal.data,
             referencias=safe_string(form.referencias.data, save_enie=True, max_len=1024),
         )
-        udp_persona_domicilio.save()
+        udp_domicilio.save()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
@@ -134,71 +134,71 @@ def new(udp_persona_id):
     )
 
 
-@udp_domicilios.route("/udp_domicilios/edicion/<int:udp_persona_domicilio_id>", methods=["GET", "POST"])
+@udp_domicilios.route("/udp_domicilios/edicion/<int:udp_domicilio_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.MODIFICAR)
-def edit(udp_persona_domicilio_id):
-    """Editar UDP Persona Domicilio"""
-    udp_persona_domicilio = UdpDomicilio.query.get_or_404(udp_persona_domicilio_id)
+def edit(udp_domicilio_id):
+    """Editar Domicilio"""
+    udp_domicilio = UdpDomicilio.query.get_or_404(udp_domicilio_id)
     form = UdpDomicilioForm()
     if form.validate_on_submit():
-        udp_persona_domicilio.municipio_id = form.municipio.data
-        udp_persona_domicilio.calle = safe_string(form.calle.data, save_enie=True)
-        udp_persona_domicilio.num_exterior = safe_string(form.num_exterior.data)
-        udp_persona_domicilio.num_interior = safe_string(form.num_interior.data)
-        udp_persona_domicilio.colonia = safe_string(form.colonia.data, save_enie=True)
-        udp_persona_domicilio.codigo_postal = form.codigo_postal.data
-        udp_persona_domicilio.referencias = safe_string(form.referencias.data, save_enie=True, max_len=1024)
-        udp_persona_domicilio.save()
+        udp_domicilio.municipio_id = form.municipio.data
+        udp_domicilio.calle = safe_string(form.calle.data, save_enie=True)
+        udp_domicilio.num_exterior = safe_string(form.num_exterior.data)
+        udp_domicilio.num_interior = safe_string(form.num_interior.data)
+        udp_domicilio.colonia = safe_string(form.colonia.data, save_enie=True)
+        udp_domicilio.codigo_postal = form.codigo_postal.data
+        udp_domicilio.referencias = safe_string(form.referencias.data, save_enie=True, max_len=1024)
+        udp_domicilio.save()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Editado domicilio de {udp_persona_domicilio.udp_persona.nombre_completo}"),
-            url=url_for("udp_personas.detail", udp_persona_id=udp_persona_domicilio.udp_persona_id),
+            descripcion=safe_message(f"Editado domicilio de {udp_domicilio.udp_persona.nombre_completo}"),
+            url=url_for("udp_personas.detail", udp_persona_id=udp_domicilio.udp_persona_id),
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
-    form.municipio.data = udp_persona_domicilio.municipio_id
-    form.calle.data = udp_persona_domicilio.calle
-    form.num_exterior.data = udp_persona_domicilio.num_exterior
-    form.num_interior.data = udp_persona_domicilio.num_interior
-    form.colonia.data = udp_persona_domicilio.colonia
-    form.codigo_postal.data = udp_persona_domicilio.codigo_postal
-    form.referencias.data = udp_persona_domicilio.referencias
-    return render_template("udp_domicilios/edit.jinja2", form=form, udp_persona_domicilio=udp_persona_domicilio)
+    form.municipio.data = udp_domicilio.municipio_id
+    form.calle.data = udp_domicilio.calle
+    form.num_exterior.data = udp_domicilio.num_exterior
+    form.num_interior.data = udp_domicilio.num_interior
+    form.colonia.data = udp_domicilio.colonia
+    form.codigo_postal.data = udp_domicilio.codigo_postal
+    form.referencias.data = udp_domicilio.referencias
+    return render_template("udp_domicilios/edit.jinja2", form=form, udp_domicilio=udp_domicilio)
 
 
-@udp_domicilios.route("/udp_domicilios/eliminar/<int:udp_persona_domicilio_id>")
+@udp_domicilios.route("/udp_domicilios/eliminar/<int:udp_domicilio_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
-def delete(udp_persona_domicilio_id):
-    """Eliminar UDP Persona Domicilio"""
-    udp_persona_domicilio = UdpDomicilio.query.get_or_404(udp_persona_domicilio_id)
-    if udp_persona_domicilio.estatus == "A":
-        udp_persona_domicilio.delete()
+def delete(udp_domicilio_id):
+    """Eliminar Domicilio"""
+    udp_domicilio = UdpDomicilio.query.get_or_404(udp_domicilio_id)
+    if udp_domicilio.estatus == "A":
+        udp_domicilio.delete()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Eliminado domicilio de {udp_persona_domicilio.udp_persona.nombre_completo}"),
-            url=url_for("udp_personas.detail", udp_persona_id=udp_persona_domicilio.udp_persona_id),
+            descripcion=safe_message(f"Eliminado domicilio de {udp_domicilio.udp_persona.nombre_completo}"),
+            url=url_for("udp_personas.detail", udp_persona_id=udp_domicilio.udp_persona_id),
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
-    return redirect(url_for("udp_personas.detail", udp_persona_id=udp_persona_domicilio.udp_persona_id))
+    return redirect(url_for("udp_personas.detail", udp_persona_id=udp_domicilio.udp_persona_id))
 
 
-@udp_domicilios.route("/udp_domicilios/recuperar/<int:udp_persona_domicilio_id>")
+@udp_domicilios.route("/udp_domicilios/recuperar/<int:udp_domicilio_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
-def recover(udp_persona_domicilio_id):
-    """Recuperar UDP Persona Domicilio"""
-    udp_persona_domicilio = UdpDomicilio.query.get_or_404(udp_persona_domicilio_id)
-    if udp_persona_domicilio.estatus == "B":
-        udp_persona_domicilio.recover()
+def recover(udp_domicilio_id):
+    """Recuperar Domicilio"""
+    udp_domicilio = UdpDomicilio.query.get_or_404(udp_domicilio_id)
+    if udp_domicilio.estatus == "B":
+        udp_domicilio.recover()
         bitacora = Bitacora(
             modulo=Modulo.query.filter_by(nombre=MODULO).first(),
             usuario=current_user,
-            descripcion=safe_message(f"Recuperado domicilio de {udp_persona_domicilio.udp_persona.nombre_completo}"),
-            url=url_for("udp_personas.detail", udp_persona_id=udp_persona_domicilio.udp_persona_id),
+            descripcion=safe_message(f"Recuperado domicilio de {udp_domicilio.udp_persona.nombre_completo}"),
+            url=url_for("udp_personas.detail", udp_persona_id=udp_domicilio.udp_persona_id),
         )
         bitacora.save()
         flash(bitacora.descripcion, "success")
-    return redirect(url_for("udp_personas.detail", udp_persona_id=udp_persona_domicilio.udp_persona_id))
+    return redirect(url_for("udp_personas.detail", udp_persona_id=udp_domicilio.udp_persona_id))

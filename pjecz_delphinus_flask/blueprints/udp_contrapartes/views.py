@@ -30,7 +30,7 @@ def before_request():
 
 @udp_contrapartes.route("/udp_contrapartes/datatable_json", methods=["GET", "POST"])
 def datatable_json():
-    """DataTable JSON para listado de UDP Contrapartes"""
+    """DataTable JSON para listado de Contrapartes"""
     draw, start, rows_per_page = get_datatable_parameters()
     consulta = UdpContraparte.query
     if "estatus" in request.form:
@@ -78,7 +78,7 @@ def datatable_json():
 
 @udp_contrapartes.route("/udp_contrapartes")
 def list_active():
-    """Listado de UDP Contrapartes activos"""
+    """Listado de Contrapartes activas"""
     return render_template(
         "udp_contrapartes/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
@@ -90,7 +90,7 @@ def list_active():
 @udp_contrapartes.route("/udp_contrapartes/inactivos")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def list_inactive():
-    """Listado de UDP Contrapartes inactivos"""
+    """Listado de Contrapartes inactivas"""
     return render_template(
         "udp_contrapartes/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
@@ -101,7 +101,7 @@ def list_inactive():
 
 @udp_contrapartes.route("/udp_contrapartes/<int:udp_contraparte_id>")
 def detail(udp_contraparte_id):
-    """Detalle de un UDP Contraparte"""
+    """Detalle de una Contraparte"""
     udp_contraparte = UdpContraparte.query.get_or_404(udp_contraparte_id)
     return render_template("udp_contrapartes/detail.jinja2", udp_contraparte=udp_contraparte)
 
@@ -109,7 +109,7 @@ def detail(udp_contraparte_id):
 @udp_contrapartes.route("/udp_contrapartes/nuevo", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.CREAR)
 def new():
-    """Nuevo UDP Contraparte"""
+    """Nueva Contraparte"""
     form = UdpContraparteForm()
     if form.validate_on_submit():
         nombres = safe_string(form.nombres.data, save_enie=True)
@@ -145,7 +145,7 @@ def new():
 @udp_contrapartes.route("/udp_contrapartes/edicion/<int:udp_contraparte_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.MODIFICAR)
 def edit(udp_contraparte_id):
-    """Editar UDP Contraparte"""
+    """Editar Contraparte"""
     udp_contraparte = UdpContraparte.query.get_or_404(udp_contraparte_id)
     form = UdpContraparteForm()
     if form.validate_on_submit():
@@ -179,7 +179,7 @@ def edit(udp_contraparte_id):
 @udp_contrapartes.route("/udp_contrapartes/eliminar/<int:udp_contraparte_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def delete(udp_contraparte_id):
-    """Eliminar UDP Contraparte"""
+    """Eliminar Contraparte"""
     udp_contraparte = UdpContraparte.query.get_or_404(udp_contraparte_id)
     if udp_contraparte.estatus == "A":
         udp_contraparte.delete()
@@ -197,7 +197,7 @@ def delete(udp_contraparte_id):
 @udp_contrapartes.route("/udp_contrapartes/recuperar/<int:udp_contraparte_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_contraparte_id):
-    """Recuperar UDP Contraparte"""
+    """Recuperar Contraparte"""
     udp_contraparte = UdpContraparte.query.get_or_404(udp_contraparte_id)
     if udp_contraparte.estatus == "B":
         udp_contraparte.recover()
@@ -214,7 +214,7 @@ def recover(udp_contraparte_id):
 
 @udp_contrapartes.route("/udp_contrapartes/select_json", methods=["GET", "POST"])
 def select_json():
-    """Proporcionar el JSON con los ids, nombres para elegir con un select"""
+    """Proporcionar el JSON con los ids, nombres completos - CURP para elegir con un select"""
     consulta = UdpContraparte.query.filter_by(estatus="A")
     if "searchTerm" in request.args:
         search_term = safe_string(request.args.get("searchTerm", ""), save_enie=True)

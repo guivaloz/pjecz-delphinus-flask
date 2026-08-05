@@ -30,7 +30,7 @@ def before_request():
 
 @udp_personas.route("/udp_personas/datatable_json", methods=["GET", "POST"])
 def datatable_json():
-    """DataTable JSON para listado de UDP Personas"""
+    """DataTable JSON para listado de Personas"""
     draw, start, rows_per_page = get_datatable_parameters()
     consulta = UdpPersona.query
     if "estatus" in request.form:
@@ -78,7 +78,7 @@ def datatable_json():
 
 @udp_personas.route("/udp_personas")
 def list_active():
-    """Listado de UDP Personas activos"""
+    """Listado de Personas activas"""
     return render_template(
         "udp_personas/list.jinja2",
         filtros=json.dumps({"estatus": "A"}),
@@ -90,7 +90,7 @@ def list_active():
 @udp_personas.route("/udp_personas/inactivos")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def list_inactive():
-    """Listado de UDP Personas inactivos"""
+    """Listado de Personas inactivas"""
     return render_template(
         "udp_personas/list.jinja2",
         filtros=json.dumps({"estatus": "B"}),
@@ -101,7 +101,7 @@ def list_inactive():
 
 @udp_personas.route("/udp_personas/<int:udp_persona_id>")
 def detail(udp_persona_id):
-    """Detalle de un UDP Persona"""
+    """Detalle de una Persona"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     return render_template("udp_personas/detail.jinja2", udp_persona=udp_persona)
 
@@ -109,7 +109,7 @@ def detail(udp_persona_id):
 @udp_personas.route("/udp_personas/nuevo", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.CREAR)
 def new():
-    """Nuevo UDP Persona"""
+    """Nueva Persona"""
     form = UdpPersonaForm()
     if form.validate_on_submit():
         es_valido = True
@@ -164,7 +164,7 @@ def new():
 @udp_personas.route("/udp_personas/edicion/<int:udp_persona_id>", methods=["GET", "POST"])
 @permission_required(MODULO, Permiso.MODIFICAR)
 def edit(udp_persona_id):
-    """Editar UDP Persona"""
+    """Editar Persona"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     form = UdpPersonaForm()
     if form.validate_on_submit():
@@ -207,7 +207,7 @@ def edit(udp_persona_id):
 @udp_personas.route("/udp_personas/eliminar/<int:udp_persona_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def delete(udp_persona_id):
-    """Eliminar UDP Persona"""
+    """Eliminar Persona"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     if udp_persona.estatus == "A":
         udp_persona.delete()
@@ -225,7 +225,7 @@ def delete(udp_persona_id):
 @udp_personas.route("/udp_personas/recuperar/<int:udp_persona_id>")
 @permission_required(MODULO, Permiso.ADMINISTRAR)
 def recover(udp_persona_id):
-    """Recuperar UDP Persona"""
+    """Recuperar Persona"""
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     if udp_persona.estatus == "B":
         udp_persona.recover()
