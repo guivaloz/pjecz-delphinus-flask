@@ -18,7 +18,7 @@
         <table id="udp_atenciones_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Fecha Hora</th>
                     <th>Tipo Trámite</th>
                     <th>Usuario</th>
                     <th>Autoridad</th>
@@ -49,7 +49,7 @@
                 targets: 0,
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.id + '</a>';
+                    return '<a href="' + data.url + '">' + data.creado + '</a>';
                 }
             }
         ];

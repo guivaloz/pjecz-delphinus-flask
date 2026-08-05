@@ -48,10 +48,11 @@ def datatable_json():
             {
                 "detalle": {
                     "id": resultado.id,
+                    "creado": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                     "url": url_for("udp_visitas.detail", udp_visita_id=resultado.id),
                 },
                 "udp_tipo_visita_nombre": resultado.udp_tipo_visita.nombre,
-                "usuario_email": resultado.usuario.email,
+                "observaciones": (resultado.observaciones[:48] + '...') if len(resultado.observaciones) > 48 else resultado.observaciones,
             }
         )
     return output_datatable_json(draw, total, data)
@@ -97,7 +98,6 @@ def new(udp_persona_id):
         udp_visita = UdpVisita(
             udp_persona_id=udp_persona.id,
             udp_tipo_visita_id=form.udp_tipo_visita.data,
-            usuario_id=current_user.id,
             observaciones=safe_string(form.observaciones.data, save_enie=True, max_len=1024),
         )
         udp_visita.save()

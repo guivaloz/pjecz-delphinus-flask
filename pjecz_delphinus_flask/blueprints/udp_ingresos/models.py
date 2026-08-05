@@ -26,7 +26,7 @@ class UdpIngreso(database.Model, UniversalMixin):
     udp_persona: Mapped["UdpPersona"] = relationship(back_populates="udp_ingresos")
 
     # Columnas
-    ocupacion: Mapped[str] = mapped_column(String(256), default="", server_default="")
+    ocupacion: Mapped[str] = mapped_column(String(256))
     ingresos: Mapped[Decimal] = mapped_column(Numeric(precision=10, scale=2))
     observaciones: Mapped[Optional[str]] = mapped_column(String(1024), default="", server_default="")
 

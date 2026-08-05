@@ -50,11 +50,12 @@ def datatable_json():
             {
                 "detalle": {
                     "id": resultado.id,
+                    "calle": resultado.calle,
                     "url": url_for("udp_domicilios.detail", udp_domicilio_id=resultado.id),
                 },
-                "calle": resultado.calle or "",
-                "num_exterior": resultado.num_exterior or "",
-                "colonia": resultado.colonia or "",
+                "num_exterior": resultado.num_exterior,
+                "num_interior": resultado.num_interior,
+                "colonia": resultado.colonia,
                 "municipio_nombre": resultado.municipio.nombre,
             }
         )

@@ -27,7 +27,7 @@ class UdpDomicilio(database.Model, UniversalMixin):
     municipio: Mapped["Municipio"] = relationship(back_populates="udp_domicilios")
 
     # Columnas
-    calle: Mapped[str] = mapped_column(String(256), default="", server_default="")
+    calle: Mapped[str] = mapped_column(String(256))
     num_exterior: Mapped[Optional[str]] = mapped_column(String(64), default="", server_default="")
     num_interior: Mapped[Optional[str]] = mapped_column(String(64), default="", server_default="")
     colonia: Mapped[Optional[str]] = mapped_column(String(256), default="", server_default="")

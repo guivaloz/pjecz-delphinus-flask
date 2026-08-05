@@ -15,7 +15,7 @@ from pjecz_delphinus_flask.blueprints.udp_atenciones.models import UdpAtencion
 from pjecz_delphinus_flask.blueprints.udp_personas.models import UdpPersona
 from pjecz_delphinus_flask.blueprints.usuarios.decorators import permission_required
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
-from pjecz_delphinus_flask.lib.safe_string import safe_expediente, safe_message, safe_string
+from pjecz_delphinus_flask.lib.safe_string import safe_message, safe_string
 
 MODULO = "UDP ATENCIONES"
 
@@ -48,6 +48,7 @@ def datatable_json():
             {
                 "detalle": {
                     "id": resultado.id,
+                    "creado": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                     "url": url_for("udp_atenciones.detail", udp_atencion_id=resultado.id),
                 },
                 "udp_tipo_tramite_nombre": resultado.udp_tipo_tramite.nombre,
@@ -96,19 +97,12 @@ def new(udp_persona_id):
     udp_persona = UdpPersona.query.get_or_404(udp_persona_id)
     form = UdpAtencionForm()
     if form.validate_on_submit():
-        expediente = ""
-        if form.expediente.data:
-            try:
-                expediente = safe_expediente(form.expediente.data)
-            except ValueError:
-                flash("El expediente no es válido.", "warning")
-                return render_template("udp_atenciones/new.jinja2", form=form, udp_persona=udp_persona)
         udp_atencion = UdpAtencion(
             udp_persona_id=udp_persona.id,
             udp_tipo_tramite_id=form.udp_tipo_tramite.data,
             usuario_id=current_user.id,
             autoridad_id=form.autoridad.data,
-            expediente=expediente,
+            expediente=form.expediente.data,
             observaciones=safe_string(form.observaciones.data, save_enie=True, max_len=1024),
         )
         udp_atencion.save()
@@ -137,18 +131,9 @@ def edit(udp_atencion_id):
     udp_atencion = UdpAtencion.query.get_or_404(udp_atencion_id)
     form = UdpAtencionForm()
     if form.validate_on_submit():
-        expediente = ""
-        if form.expediente.data:
-            try:
-                expediente = safe_expediente(form.expediente.data)
-            except ValueError:
-                flash("El expediente no es válido.", "warning")
-                return render_template(
-                    "udp_atenciones/edit.jinja2", form=form, udp_atencion=udp_atencion
-                )
         udp_atencion.udp_tipo_tramite_id = form.udp_tipo_tramite.data
         udp_atencion.autoridad_id = form.autoridad.data
-        udp_atencion.expediente = expediente
+        udp_atencion.expediente = form.expediente.data
         udp_atencion.observaciones = safe_string(form.observaciones.data, save_enie=True, max_len=1024)
         udp_atencion.save()
         bitacora = Bitacora(

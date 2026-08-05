@@ -48,6 +48,7 @@ def datatable_json():
             {
                 "detalle": {
                     "id": resultado.id,
+                    "creado": resultado.creado.strftime("%Y-%m-%d %H:%M"),
                     "url": url_for("udp_ingresos.detail", udp_ingreso_id=resultado.id),
                 },
                 "ocupacion": resultado.ocupacion or "",

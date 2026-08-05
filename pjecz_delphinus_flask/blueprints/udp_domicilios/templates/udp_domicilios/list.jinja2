@@ -24,9 +24,9 @@
         <table id="udp_domicilios_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Calle</th>
-                    <th>Num Ext</th>
+                    <th>Num. Ext.</th>
+                    <th>Num. Int.</th>
                     <th>Colonia</th>
                     <th>Municipio</th>
                 </tr>
@@ -45,8 +45,8 @@
         configDT['ajax']['data'] = {{ filtros }};
         configDT['columns'] = [
             { data: 'detalle' },
-            { data: 'calle' },
             { data: 'num_exterior' },
+            { data: 'num_interior' },
             { data: 'colonia' },
             { data: 'municipio_nombre' }
         ];
@@ -55,7 +55,7 @@
                 targets: 0,
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.id + '</a>';
+                    return '<a href="' + data.url + '">' + data.calle + '</a>';
                 }
             }
         ];

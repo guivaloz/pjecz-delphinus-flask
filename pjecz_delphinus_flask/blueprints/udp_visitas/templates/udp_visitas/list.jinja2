@@ -18,9 +18,9 @@
         <table id="udp_visitas_datatable" class="table {% if estatus == 'B'%}table-dark{% endif %} display nowrap" style="width:100%">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Fecha Hora</th>
                     <th>Tipo Visita</th>
-                    <th>Usuario</th>
+                    <th>Observaciones</th>
                 </tr>
             </thead>
         </table>
@@ -38,14 +38,14 @@
         configDT['columns'] = [
             { data: 'detalle' },
             { data: 'udp_tipo_visita_nombre' },
-            { data: 'usuario_email' }
+            { data: 'observaciones' }
         ];
         configDT['columnDefs'] = [
             {
                 targets: 0,
                 data: null,
                 render: function(data, type, row, meta) {
-                    return '<a href="' + data.url + '">' + data.id + '</a>';
+                    return '<a href="' + data.url + '">' + data.creado + '</a>';
                 }
             }
         ];

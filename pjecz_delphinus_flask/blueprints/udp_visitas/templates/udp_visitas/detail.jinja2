@@ -3,10 +3,10 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Visita {{ udp_visita.id }}{% endblock %}
+{% block title %}Visita de {{ udp_visita.udp_persona.nombre_completo }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('Visita ' + udp_visita.id | string) %}
+    {% call topbar.page_buttons('Visita de ' + udp_visita.udp_persona.nombre_completo) %}
         {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_visita.udp_persona_id)) }}
         {% if current_user.can_edit('UDP VISITAS') %}
             {{ topbar.button_edit('Editar', url_for('udp_visitas.edit', udp_visita_id=udp_visita.id)) }}
@@ -22,8 +22,7 @@
     {% call detail.card(estatus=udp_visita.estatus) %}
         <div class="row">
             {{ detail.label_value('Persona', udp_visita.udp_persona.nombre_completo, url_for('udp_personas.detail', udp_persona_id=udp_visita.udp_persona_id)) }}
-            {{ detail.label_value('Tipo de Visita', udp_visita.udp_tipo_tramite.nombre) }}
-            {{ detail.label_value('Usuario', udp_visita.usuario.email) }}
+            {{ detail.label_value('Tipo de Visita', udp_visita.udp_tipo_visita.nombre) }}
             {{ detail.label_value('Observaciones', udp_visita.observaciones) }}
         </div>
     {% endcall %}

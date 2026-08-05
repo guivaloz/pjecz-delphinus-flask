@@ -3,10 +3,10 @@
 {% import 'macros/modals.jinja2' as modals %}
 {% import 'macros/topbar.jinja2' as topbar %}
 
-{% block title %}Atención {{ udp_atencion.id }}{% endblock %}
+{% block title %}Atención de {{ udp_atencion.udp_persona.nombre_completo }}{% endblock %}
 
 {% block topbar_actions %}
-    {% call topbar.page_buttons('Atención ' + udp_atencion.id | string) %}
+    {% call topbar.page_buttons('Atención de ' + udp_atencion.udp_persona.nombre_completo) %}
         {{ topbar.button_previous('Persona', url_for('udp_personas.detail', udp_persona_id=udp_atencion.udp_persona_id)) }}
         {% if current_user.can_edit('UDP ATENCIONES') %}
             {{ topbar.button_edit('Editar', url_for('udp_atenciones.edit', udp_atencion_id=udp_atencion.id)) }}

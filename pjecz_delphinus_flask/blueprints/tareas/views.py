@@ -50,7 +50,7 @@ def datatable_json():
     for resultado in registros:
         data.append(
             {
-                "creado": resultado.creado.strftime("%Y-%m-%dT%H:%M:%S"),
+                "creado": resultado.creado.strftime("%Y-%m-%d %H:%M:%S"),
                 "detalle": {
                     "comando": resultado.comando,
                     "url": url_for("tareas.detail", tarea_id=resultado.id),
