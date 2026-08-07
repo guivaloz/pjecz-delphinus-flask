@@ -1,6 +1,6 @@
 # SPEC 02 — Roles RECEPCIONISTA y DEFENSOR con selector de defensor en atenciones
 
-> **Status:** Aprobado
+> **Status:** Implementado
 > **Depends on:** SPEC 01
 > **Date:** 2026-08-06
 > **Objective:** Crear los roles RECEPCIONISTA y DEFENSOR con sus permisos, y agregar un selector de defensor obligatorio en los formularios de atenciones usando `usuarios/select_json` mejorado.

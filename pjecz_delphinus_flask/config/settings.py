@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: str = get_secret("SQLALCHEMY_DATABASE_URI")
     TZ: str = get_secret("TZ", "America/Mexico_City")
 
+
 @lru_cache
 def get_settings() -> Settings:
     """Get Settings"""
