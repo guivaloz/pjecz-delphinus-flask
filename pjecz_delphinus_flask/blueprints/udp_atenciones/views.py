@@ -100,7 +100,7 @@ def new(udp_persona_id):
         udp_atencion = UdpAtencion(
             udp_persona_id=udp_persona.id,
             udp_tipo_tramite_id=form.udp_tipo_tramite.data,
-            usuario_id=current_user.id,
+            usuario_id=form.defensor.data,
             autoridad_id=form.autoridad.data,
             expediente=form.expediente.data,
             observaciones=safe_string(form.observaciones.data, save_enie=True, max_len=1024),
@@ -115,12 +115,17 @@ def new(udp_persona_id):
         bitacora.save()
         flash(bitacora.descripcion, "success")
         return redirect(bitacora.url)
+    # Si el usuario actual tiene rol DEFENSOR, pasar su id como defensor por defecto
+    defensor_id = None
+    if "DEFENSOR" in current_user.get_roles():
+        defensor_id = current_user.id
     return render_template(
         "udp_atenciones/new.jinja2",
         form=form,
         udp_persona=udp_persona,
         distrito_por_defecto=current_user.autoridad.distrito,
         autoridad_por_defecto=current_user.autoridad,
+        defensor_id=defensor_id,
     )
 
 
@@ -133,6 +138,7 @@ def edit(udp_atencion_id):
     if form.validate_on_submit():
         udp_atencion.udp_tipo_tramite_id = form.udp_tipo_tramite.data
         udp_atencion.autoridad_id = form.autoridad.data
+        udp_atencion.usuario_id = form.defensor.data
         udp_atencion.expediente = form.expediente.data
         udp_atencion.observaciones = safe_string(form.observaciones.data, save_enie=True, max_len=1024)
         udp_atencion.save()
@@ -147,6 +153,7 @@ def edit(udp_atencion_id):
         return redirect(bitacora.url)
     form.udp_tipo_tramite.data = udp_atencion.udp_tipo_tramite_id
     form.autoridad.data = udp_atencion.autoridad_id
+    form.defensor.data = udp_atencion.usuario_id
     form.expediente.data = udp_atencion.expediente
     form.observaciones.data = udp_atencion.observaciones
     return render_template("udp_atenciones/edit.jinja2", form=form, udp_atencion=udp_atencion)

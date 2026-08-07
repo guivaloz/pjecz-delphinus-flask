@@ -52,7 +52,9 @@ def datatable_json():
                     "url": url_for("udp_visitas.detail", udp_visita_id=resultado.id),
                 },
                 "udp_tipo_visita_nombre": resultado.udp_tipo_visita.nombre,
-                "observaciones": (resultado.observaciones[:48] + '...') if len(resultado.observaciones) > 48 else resultado.observaciones,
+                "observaciones": (
+                    (resultado.observaciones[:48] + "...") if len(resultado.observaciones) > 48 else resultado.observaciones
+                ),
             }
         )
     return output_datatable_json(draw, total, data)

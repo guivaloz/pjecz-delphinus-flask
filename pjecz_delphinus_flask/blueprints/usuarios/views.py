@@ -16,9 +16,11 @@ from pjecz_delphinus_flask.blueprints.distritos.models import Distrito
 from pjecz_delphinus_flask.blueprints.entradas_salidas.models import EntradaSalida
 from pjecz_delphinus_flask.blueprints.modulos.models import Modulo
 from pjecz_delphinus_flask.blueprints.permisos.models import Permiso
+from pjecz_delphinus_flask.blueprints.roles.models import Rol
 from pjecz_delphinus_flask.blueprints.usuarios.decorators import anonymous_required, permission_required
 from pjecz_delphinus_flask.blueprints.usuarios.forms import AccesoForm, UsuarioForm
 from pjecz_delphinus_flask.blueprints.usuarios.models import Usuario
+from pjecz_delphinus_flask.blueprints.usuarios_roles.models import UsuarioRol
 from pjecz_delphinus_flask.lib.datatables import get_datatable_parameters, output_datatable_json
 from pjecz_delphinus_flask.lib.pwgen import generar_api_key, generar_contrasena
 from pjecz_delphinus_flask.lib.safe_next_url import safe_next_url
@@ -448,8 +450,15 @@ def select_json():
     if "autoridad_id" in request.args:
         autoridad_id = request.args["autoridad_id"]
         consulta = consulta.filter_by(autoridad_id=autoridad_id)
+    if "rol" in request.args:
+        rol_nombre = safe_string(request.args["rol"], save_enie=True)
+        consulta = (
+            consulta.join(UsuarioRol, UsuarioRol.usuario_id == Usuario.id)
+            .join(Rol, Rol.id == UsuarioRol.rol_id)
+            .filter(Rol.nombre == rol_nombre, UsuarioRol.estatus == "A")
+        )
     consulta = consulta.order_by(Usuario.email).all()
-    resultados = [{"id": u.id, "text": u.email} for u in consulta]
+    resultados = [{"id": u.id, "text": f"{u.email}: {u.nombre} - {u.puesto}"} for u in consulta]
     return {"results": resultados, "pagination": {"more": False}}
 
 

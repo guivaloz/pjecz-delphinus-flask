@@ -16,4 +16,5 @@ FLASK_DEBUG = os.getenv("FLASK_DEBUG", "1")
 if __name__ == "__main__":
     """Main function to run the Flask application."""
     from uvicorn import run as uvicorn_run
+
     uvicorn_run(FLASK_APP, host=FLASK_HOST, port=FLASK_PORT, reload=FLASK_DEBUG == "1")
