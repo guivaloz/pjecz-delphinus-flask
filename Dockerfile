@@ -39,4 +39,4 @@ EXPOSE 5000
 # - worker-class gthread: usar hilos en lugar de procesos para manejar múltiples solicitudes
 # - bind: dirección y puerto donde escuchar
 # - keep-alive: tiempo de espera para mantener las conexiones vivas
-CMD ["gunicorn", "--workers", "4", "--threads", "2", "--worker-class", "gthread", "--bind", "0.0.0.0:5000", "--keep-alive", "5", "pjecz_delphinus_flask.app:app"]
+CMD ["gunicorn", "--workers", "4", "--threads", "2", "--worker-class", "gthread", "--bind", "0.0.0.0:5000", "--keep-alive", "5", "pjecz_delphinus_flask.app:create_app"]
