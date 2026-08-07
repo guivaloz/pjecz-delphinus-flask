@@ -162,10 +162,10 @@ def alimentar_permisos():
                     nivel = int(row[columna])
                 except ValueError:
                     nivel = 0
-                if nivel < 0:
-                    nivel = 0
-                if nivel > 4:
-                    nivel = 4
+                nivel = max(0, nivel)
+                nivel = min(4, nivel)
+                if nivel == 0:
+                    continue
                 Permiso(
                     rol=rol,
                     modulo=modulo,
